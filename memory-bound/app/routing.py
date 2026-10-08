@@ -1,8 +1,8 @@
-"""Dijkstra (melhor rota) e isócrona (tudo que se alcança em X minutos).
+"""Dijkstra (melhor rota), árvore de caminhos até um destino e isócrona.
 
-Cada chamada cria as próprias estruturas (foto de pesos, dist, prev, visitados,
-fila) e solta tudo ao terminar. Nada é compartilhado entre requisições: é isso
-que faz a memória do processo crescer com o número de requisições simultâneas.
+Cada chamada cria as próprias estruturas (dist, prev, visitados, fila). A rota
+avulsa e a isócrona soltam tudo ao terminar. A árvore até o destino fica guardada
+na viagem enquanto ela durar (ver app/trips.py).
 """
 
 import heapq
@@ -66,6 +66,24 @@ def _dijkstra(graph: Graph, pesos: list[list[float]], origem: int, destino: int 
     return dist, prev, visitados, memoria
 
 
+def descrever_rota(graph: Graph, arestas: list[tuple[int, int]], inicio: int) -> dict:
+    """Distância, tempo sem trânsito e coordenadas de uma rota dada por arestas (u, i)."""
+    metros_total = 0.0
+    tempo_livre = 0.0
+    coordenadas: list[list[float]] = [[graph.lats[inicio], graph.lons[inicio]]]
+    for u, i in arestas:
+        v, metros, segundos = graph.adj[u][i]
+        metros_total += metros
+        tempo_livre += segundos
+        coordenadas.append([graph.lats[v], graph.lons[v]])
+    return {
+        "distancia_m": round(metros_total, 1),
+        "tempo_sem_transito_s": round(tempo_livre, 1),
+        "nos_rota": len(coordenadas),
+        "rota": coordenadas,
+    }
+
+
 def shortest_path(graph: Graph, pesos: list[list[float]], origem: int, destino: int) -> dict | None:
     """Melhor rota de origem a destino com o trânsito da foto, ou None se não houver caminho."""
     dist, prev, visitados, memoria = _dijkstra(graph, pesos, origem, destino, float("inf"))
@@ -82,8 +100,6 @@ def shortest_path(graph: Graph, pesos: list[list[float]], origem: int, destino: 
     # Acha a aresta usada em cada trecho. Entre dois nós pode haver mais de uma:
     # a usada pelo Dijkstra é a mais rápida com trânsito.
     arestas: list[tuple[int, int]] = []
-    metros_total = 0.0
-    tempo_livre = 0.0
     for k in range(len(caminho) - 1):
         u = caminho[k]
         v = caminho[k + 1]
@@ -93,23 +109,61 @@ def shortest_path(graph: Graph, pesos: list[list[float]], origem: int, destino: 
             if vizinhos[i][0] == v and (melhor == -1 or pesos[u][i] < pesos[u][melhor]):
                 melhor = i
         arestas.append((u, melhor))
-        metros_total += vizinhos[melhor][1]
-        tempo_livre += vizinhos[melhor][2]
 
-    coordenadas: list[list[float]] = []
-    for no in caminho:
-        coordenadas.append([graph.lats[no], graph.lons[no]])
+    resultado = descrever_rota(graph, arestas, origem)
+    resultado["tempo_s"] = round(dist[destino], 1)
+    resultado["nos_visitados"] = len(visitados)
+    resultado["memoria_estimada_mb"] = round(memoria, 2)
+    resultado["arestas"] = arestas
+    return resultado
 
-    return {
-        "distancia_m": round(metros_total, 1),
-        "tempo_s": round(dist[destino], 1),
-        "tempo_sem_transito_s": round(tempo_livre, 1),
-        "nos_rota": len(caminho),
-        "nos_visitados": len(visitados),
-        "memoria_estimada_mb": round(memoria, 2),
-        "rota": coordenadas,
-        "arestas": arestas,
-    }
+
+def reverse_tree(graph: Graph, pesos: list[list[float]], destino: int, origem: int,
+                 folga: float) -> tuple[dict[int, float], dict[int, int], float]:
+    """Árvore de caminhos mais rápidos que terminam no destino (Dijkstra no grafo invertido).
+
+    Vai até alcançar a origem e continua até `folga` vezes o tempo dela, para cobrir
+    pontos perto da rota caso o motorista saia do caminho.
+    Devolve (tempo_ate_destino, proxima_aresta, memoria_mb): de um nó u, o caminho segue
+    pela aresta proxima_aresta[u] de u, até chegar ao destino.
+    """
+    tempo: dict[int, float] = {destino: 0.0}
+    proxima: dict[int, int] = {}
+    visitados: set[int] = set()
+    fila: list[tuple[float, int]] = [(0.0, destino)]
+    limite = float("inf")
+
+    while fila:
+        d, v = heapq.heappop(fila)
+        if v in visitados:
+            continue
+        if d > limite:
+            break
+        visitados.add(v)
+        if v == origem:
+            limite = d * folga
+        for u, i in graph.radj[v]:
+            novo = d + pesos[u][i]
+            atual = tempo.get(u)
+            if atual is None or novo < atual:
+                tempo[u] = novo
+                proxima[u] = i
+                heapq.heappush(fila, (novo, u))
+
+    # A árvore guardada é tempo + proxima. visitados e fila somem ao sair daqui.
+    memoria = (sys.getsizeof(tempo) + sys.getsizeof(proxima) + len(tempo) * sys.getsizeof(0.0)) / 1_000_000
+    return tempo, proxima, memoria
+
+
+def caminho_pela_arvore(graph: Graph, proxima: dict[int, int], inicio: int) -> list[tuple[int, int]]:
+    """Arestas (u, i) do caminho de `inicio` até o destino da árvore."""
+    arestas: list[tuple[int, int]] = []
+    u = inicio
+    while u in proxima:
+        i = proxima[u]
+        arestas.append((u, i))
+        u = graph.adj[u][i][0]
+    return arestas
 
 
 def isochrone(graph: Graph, pesos: list[list[float]], origem: int, minutos: float) -> dict:

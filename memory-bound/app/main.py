@@ -1,7 +1,8 @@
 """Serviço de rotas com trânsito: rotas HTTP.
 
-Os endpoints são síncronos (def). O FastAPI roda cada um numa thread do pool,
-então várias rotas ficam em andamento ao mesmo tempo e a memória delas se soma.
+Os endpoints são síncronos (def). O FastAPI roda cada um numa thread do pool.
+A memória cresce com as viagens ativas (cada uma guarda a sua árvore de caminhos)
+e com as requisições em andamento (cada uma monta a sua foto do trânsito).
 """
 
 import logging
@@ -15,6 +16,7 @@ from app import metrics
 from app.graph import load_graph
 from app.routing import isochrone, shortest_path
 from app.traffic import Transito
+from app.trips import Viagens
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("rotas")
@@ -23,12 +25,15 @@ MAP_FILE = os.environ.get("MAP_FILE", "data/campina_grande.map.gz")
 MAX_CONCURRENT = int(os.environ.get("MAX_CONCURRENT", "0"))
 MAX_ALCANCE_MIN = float(os.environ.get("MAX_ALCANCE_MIN", "30"))
 CAPACIDADE_VIA = float(os.environ.get("CAPACIDADE_VIA", "2"))
+ARVORE_VALIDADE_S = float(os.environ.get("ARVORE_VALIDADE_S", "60"))
+VIAGEM_EXPIRA_S = float(os.environ.get("VIAGEM_EXPIRA_S", "300"))
 
 log.info("carregando mapa %s", MAP_FILE)
 graph = load_graph(MAP_FILE)
 log.info("mapa carregado: %d nós, %d arestas, RSS do processo %.1f MB",
          graph.num_nodes, graph.num_edges, metrics.rss_mb())
 transito = Transito(graph, CAPACIDADE_VIA)
+viagens = Viagens(graph, transito, ARVORE_VALIDADE_S, VIAGEM_EXPIRA_S)
 
 semaforo = threading.BoundedSemaphore(max(MAX_CONCURRENT, 1))
 
@@ -81,12 +86,8 @@ def health():
 
 
 @app.get("/rota")
-def rota(origem: str, destino: str, veiculo: str | None = None):
-    """Melhor rota com o trânsito de agora.
-
-    Com `veiculo`, a rota passa a contar no trânsito (e substitui a rota anterior
-    desse veículo, se ele estiver recalculando).
-    """
+def rota(origem: str, destino: str):
+    """Melhor rota avulsa com o trânsito de agora (não guarda nada depois)."""
     with metrics.track("rota") as info:
         no_origem = no_mais_proximo(origem)
         no_destino = no_mais_proximo(destino)
@@ -97,19 +98,49 @@ def rota(origem: str, destino: str, veiculo: str | None = None):
             del pesos
         if resultado is None:
             raise HTTPException(404, "não há caminho entre os pontos")
-        arestas = resultado.pop("arestas")
-        if veiculo is not None:
-            transito.registrar(veiculo, arestas)
+        del resultado["arestas"]
         info["nos_visitados"] = resultado["nos_visitados"]
         return resultado
 
 
-@app.delete("/veiculos/{veiculo}")
-def chegada(veiculo: str):
-    """O veículo chegou ao destino: sai do trânsito."""
-    if not transito.remover(veiculo):
-        raise HTTPException(404, f"veículo {veiculo!r} não está em rota")
-    return {"veiculo": veiculo, "status": "chegou"}
+@app.post("/viagens")
+def iniciar_viagem(origem: str, destino: str):
+    """Inicia uma viagem: calcula e guarda a árvore de caminhos até o destino."""
+    with metrics.track("viagem_inicio") as info:
+        no_origem = no_mais_proximo(origem)
+        no_destino = no_mais_proximo(destino)
+        with vaga():
+            resultado = viagens.criar(no_origem, no_destino)
+        if resultado is None:
+            raise HTTPException(404, "não há caminho entre os pontos")
+        info["nos_visitados"] = resultado["nos_arvore"]
+        return resultado
+
+
+@app.get("/viagens/{viagem_id}/rota")
+def recalcular_viagem(viagem_id: str, posicao: str):
+    """Recálculo: rota da posição atual até o destino da viagem."""
+    with metrics.track("viagem_recalculo") as info:
+        viagem = viagens.buscar(viagem_id)
+        if viagem is None:
+            raise HTTPException(404, f"viagem {viagem_id!r} não existe")
+        no_posicao = no_mais_proximo(posicao)
+        with vaga():
+            resultado = viagens.recalcular(viagem, no_posicao)
+        if resultado is None:
+            raise HTTPException(404, "não há caminho da posição até o destino")
+        resultado["viagem"] = viagem_id
+        info["nos_visitados"] = resultado["nos_arvore"] if resultado["arvore_nova"] else 0
+        return resultado
+
+
+@app.delete("/viagens/{viagem_id}")
+def encerrar_viagem(viagem_id: str):
+    """O veículo chegou: libera a árvore e sai do trânsito."""
+    with metrics.track("viagem_fim"):
+        if not viagens.encerrar(viagem_id):
+            raise HTTPException(404, f"viagem {viagem_id!r} não existe")
+        return {"viagem": viagem_id, "status": "encerrada"}
 
 
 @app.get("/alcance")
@@ -129,7 +160,7 @@ def alcance(origem: str, minutos: float = 15):
 @app.get("/metrics")
 def metrics_endpoint():
     dados = metrics.snapshot()
-    dados["veiculos_ativos"] = transito.veiculos_ativos()
+    dados["viagens_ativas"] = viagens.quantidade()
     return dados
 
 

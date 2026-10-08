@@ -19,12 +19,14 @@ from app.graph import load_graph  # noqa: E402
 from app.main import app  # noqa: E402
 from app.routing import isochrone, shortest_path  # noqa: E402
 from app.traffic import Transito  # noqa: E402
+from app.trips import Viagens  # noqa: E402
 
 graph = load_graph(MINI_MAP)
 sem_transito = Transito(graph, capacidade=1).foto_pesos()
 client = TestClient(app)
 
 PONTO_0 = "-7.2300,-35.8800"
+PONTO_1 = "-7.2300,-35.8790"
 PONTO_3 = "-7.2310,-35.8790"
 PONTO_4 = "-7.2320,-35.8780"
 
@@ -62,20 +64,58 @@ def test_transito_desvia_e_libera():
     transito = Transito(graph, capacidade=1)
     rapida = shortest_path(graph, transito.foto_pesos(), 0, 3)["arestas"]
     # Dois veículos na rota rápida: cada aresta passa de 10 s para 34 s (BPR), 68 s no total.
-    transito.registrar("a", rapida)
-    transito.registrar("b", rapida)
+    transito.trocar([], rapida)
+    transito.trocar([], rapida)
     r = shortest_path(graph, transito.foto_pesos(), 0, 3)
-    assert r["nos_rota"] == 3
     assert r["rota"][1] == [-7.231, -35.88]  # foi pelo nó 2
     assert r["tempo_s"] == 35.0
     assert r["tempo_sem_transito_s"] == 35.0
 
     # Um veículo recalcula para a alternativa: sai da rota antiga e entra na nova.
-    transito.registrar("b", r["arestas"])
+    transito.trocar(rapida, r["arestas"])
     assert transito.fluxo[0] == [1, 1]
-    assert transito.remover("a") is True
-    assert transito.remover("a") is False
-    assert transito.veiculos_ativos() == 1
+
+
+def nova_viagens(validade_arvore_s: float = 60, expira_s: float = 300) -> Viagens:
+    return Viagens(graph, Transito(graph, capacidade=1), validade_arvore_s, expira_s)
+
+
+def test_viagem_guarda_arvore_e_recalcula_sem_refazer():
+    viagens = nova_viagens()
+    r = viagens.criar(0, 3)
+    assert r["tempo_s"] == 20.0
+    assert r["arvore_nova"] is True
+    assert viagens.transito.fluxo[0][0] == 1  # aresta 0 -> 1
+    assert viagens.transito.fluxo[1][0] == 1  # aresta 1 -> 3
+
+    # O motorista chegou no nó 1: a rota sai da árvore guardada.
+    r = viagens.recalcular(viagens.buscar(r["viagem"]), 1)
+    assert r["arvore_nova"] is False
+    assert r["tempo_s"] == 10.0
+    assert r["nos_rota"] == 2
+    assert viagens.transito.fluxo[0][0] == 0
+    assert viagens.transito.fluxo[1][0] == 1
+
+
+def test_viagem_refaz_arvore_velha():
+    viagens = nova_viagens(validade_arvore_s=0)
+    r = viagens.criar(0, 3)
+    r = viagens.recalcular(viagens.buscar(r["viagem"]), 0)
+    assert r["arvore_nova"] is True
+
+
+def test_viagem_encerra_e_expira():
+    viagens = nova_viagens()
+    r = viagens.criar(0, 3)
+    assert viagens.encerrar(r["viagem"]) is True
+    assert viagens.encerrar(r["viagem"]) is False
+    assert viagens.transito.fluxo[0] == [0, 0]
+    assert viagens.transito.fluxo[1] == [0]
+
+    viagens.expira_s = -1  # qualquer viagem já está vencida
+    viagens.criar(0, 3)
+    assert viagens.expirar() == 1
+    assert viagens.quantidade() == 0
 
 
 def test_endpoint_health():
@@ -91,13 +131,20 @@ def test_endpoint_rota():
     assert "arestas" not in r.json()
 
 
-def test_endpoint_veiculo_entra_e_sai_do_transito():
-    params = {"origem": PONTO_0, "destino": PONTO_3, "veiculo": "v1"}
-    assert client.get("/rota", params=params).status_code == 200
-    assert client.get("/metrics").json()["veiculos_ativos"] == 1
-    assert client.delete("/veiculos/v1").status_code == 200
-    assert client.delete("/veiculos/v1").status_code == 404
-    assert client.get("/metrics").json()["veiculos_ativos"] == 0
+def test_endpoint_viagem():
+    r = client.post("/viagens", params={"origem": PONTO_0, "destino": PONTO_3})
+    assert r.status_code == 200
+    viagem_id = r.json()["viagem"]
+    assert client.get("/metrics").json()["viagens_ativas"] == 1
+
+    r = client.get(f"/viagens/{viagem_id}/rota", params={"posicao": PONTO_1})
+    assert r.status_code == 200
+    assert r.json()["tempo_s"] == 10.0
+
+    assert client.delete(f"/viagens/{viagem_id}").status_code == 200
+    assert client.delete(f"/viagens/{viagem_id}").status_code == 404
+    assert client.get(f"/viagens/{viagem_id}/rota", params={"posicao": PONTO_1}).status_code == 404
+    assert client.get("/metrics").json()["viagens_ativas"] == 0
 
 
 def test_endpoint_rota_erros():

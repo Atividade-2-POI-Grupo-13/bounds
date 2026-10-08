@@ -6,8 +6,13 @@ Para cada mapa e endpoint, sobe um servidor novo e mede:
   - tempo de CPU médio de uma requisição;
   - quanto o RSS cresce com 1, 5, 10, 20 e 40 requisições simultâneas.
 
-Exemplo:
+Com --viagens, mede o estado guardado entre requisições:
+  - quanto o RSS cresce com 1, 5, 10, 20, 40 e 80 viagens ativas;
+  - CPU para iniciar uma viagem e para um recálculo que usa a árvore guardada.
+
+Exemplos:
     python tools/calibrate.py data/campina_grande.map.gz data/paraiba.map.gz --minutos 15
+    python tools/calibrate.py data/paraiba.map.gz --viagens
 """
 
 import argparse
@@ -26,11 +31,18 @@ import psutil
 PORTA = 8011
 URL = f"http://127.0.0.1:{PORTA}"
 NIVEIS = [1, 5, 10, 20, 40]
+NIVEIS_VIAGENS = [1, 5, 10, 20, 40, 80]
 
 
-def get_json(caminho: str) -> dict:
-    with urllib.request.urlopen(URL + caminho, timeout=600) as resposta:
+def get_json(caminho: str, metodo: str = "GET") -> dict:
+    requisicao = urllib.request.Request(URL + caminho, method=metodo)
+    with urllib.request.urlopen(requisicao, timeout=600) as resposta:
         return json.loads(resposta.read())
+
+
+def cpu_s(processo: psutil.Process) -> float:
+    tempos = processo.cpu_times()
+    return tempos.user + tempos.system
 
 
 def subir_servidor(mapa: str) -> subprocess.Popen:
@@ -140,6 +152,51 @@ def calibrar(mapa: str, pontos: list[dict], endpoint: str, minutos: float, amost
     }
 
 
+def calibrar_viagens(mapa: str, pontos: list[dict]) -> None:
+    """Abre viagens e não fecha: mede quanto cada viagem ativa segura de memória."""
+    proc = subir_servidor(mapa)
+    processo = psutil.Process(proc.pid)
+    try:
+        base = processo.memory_info().rss / 1_000_000
+        print(f"{os.path.basename(mapa)}: base {base:.0f} MB")
+        print("| viagens ativas | RSS MB | +RSS MB | +RSS por viagem MB | árvore média MB | nós por árvore | CPU início ms |")
+        print("|---|---|---|---|---|---|---|")
+        abertas: list[dict] = []
+        memorias: list[float] = []
+        nos: list[int] = []
+        cpu_inicios = 0.0
+        for nivel in NIVEIS_VIAGENS:
+            while len(abertas) < nivel:
+                par = pontos[len(abertas) % len(pontos)]
+                caminho = (f"/viagens?origem={par['origem'][0]},{par['origem'][1]}"
+                           f"&destino={par['destino'][0]},{par['destino'][1]}")
+                antes = cpu_s(processo)
+                r = get_json(caminho, "POST")
+                cpu_inicios += cpu_s(processo) - antes
+                abertas.append(r)
+                memorias.append(r["memoria_arvore_mb"])
+                nos.append(r["nos_arvore"])
+            rss = processo.memory_info().rss / 1_000_000
+            print(f"| {nivel} | {rss:.0f} | {rss - base:.0f} | {(rss - base) / nivel:.1f} "
+                  f"| {sum(memorias) / len(memorias):.1f} | {sum(nos) / len(nos):.0f} "
+                  f"| {cpu_inicios / len(abertas) * 1000:.0f} |")
+
+        # Recálculo do meio da rota, com a árvore ainda válida.
+        antes = cpu_s(processo)
+        novas = 0
+        for r in abertas:
+            meio = r["rota"][len(r["rota"]) // 2]
+            resposta = get_json(f"/viagens/{r['viagem']}/rota?posicao={meio[0]},{meio[1]}")
+            if resposta["arvore_nova"]:
+                novas += 1
+        cpu_recalculo = (cpu_s(processo) - antes) / len(abertas) * 1000
+        print(f"\nCPU por recálculo pela árvore guardada: {cpu_recalculo:.1f} ms "
+              f"({novas} de {len(abertas)} precisaram refazer a árvore)")
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 def arquivo_pontos(mapa: str) -> str:
     nome = os.path.basename(mapa).replace(".map.gz", "")
     return os.path.join(os.path.dirname(mapa), f"pontos_{nome}.json")
@@ -151,7 +208,14 @@ def main() -> None:
     parser.add_argument("--minutos", type=float, default=15, help="minutos usados no /alcance")
     parser.add_argument("--amostras", type=int, default=30, help="requisições em sequência por endpoint")
     parser.add_argument("--endpoints", default="rota,alcance")
+    parser.add_argument("--viagens", action="store_true", help="mede memória por viagem ativa")
     args = parser.parse_args()
+
+    if args.viagens:
+        for mapa in args.mapas:
+            with open(arquivo_pontos(mapa)) as f:
+                calibrar_viagens(mapa, json.load(f))
+        return
 
     resultados: list[dict] = []
     for mapa in args.mapas:

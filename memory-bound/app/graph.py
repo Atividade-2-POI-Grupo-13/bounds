@@ -34,6 +34,17 @@ class Graph:
         for vizinhos in adj:
             self.num_edges += len(vizinhos)
 
+        # Grafo invertido: radj[v] = lista de (u, i) tal que a aresta i de u chega em v.
+        # Serve para calcular a árvore de caminhos que termina num destino.
+        self.radj: list[list[tuple[int, int]]] = []
+        for _ in range(len(adj)):
+            self.radj.append([])
+        for u in range(len(adj)):
+            vizinhos = adj[u]
+            for i in range(len(vizinhos)):
+                v = vizinhos[i][0]
+                self.radj[v].append((u, i))
+
         # Índice em grade: cada célula guarda os nós que caem nela.
         self.grade: dict[tuple[int, int], list[int]] = {}
         for no in range(len(lats)):
