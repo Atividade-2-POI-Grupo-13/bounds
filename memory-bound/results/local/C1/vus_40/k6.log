@@ -1,0 +1,86 @@
+time="2026-10-08T15:13:53-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7507944,-35.4367117&destino=-7.5106288,-36.9628331\": request timeout"
+time="2026-10-08T15:13:55-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7545621,-38.2408085&destino=-6.8944688,-35.4636888\": request timeout"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.5100941,-36.2957812&destino=-7.2118721,-35.9274012\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1577044,-35.2261725&destino=-7.0319671,-37.2909048\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.4264564,-38.0690134&destino=-6.5185049,-36.0595298\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/16\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5724246,-35.5008572&destino=-7.7414003,-37.9951463\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.4572143,-38.3749092&destino=-7.124694,-34.9806774\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7634231,-34.9574447&destino=-7.5152188,-37.6404075\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0149462,-37.2694864&destino=-7.2547918,-36.2439049\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.5592158,-36.2359862&destino=-7.0044076,-36.9024351\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/38/rota?posicao=-7.211984,-35.929782\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/31/rota?posicao=-7.257369,-37.233006\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/37/rota?posicao=-6.911352,-37.60563\": EOF"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/35/rota?posicao=-7.05672,-36.367046\": read tcp 127.0.0.1:50603->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/27/rota?posicao=-7.123505,-36.942946\": read tcp 127.0.0.1:50614->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/25/rota?posicao=-7.262965,-37.337878\": read tcp 127.0.0.1:50606->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/43/rota?posicao=-7.147222,-35.968101\": read tcp 127.0.0.1:50610->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/41/rota?posicao=-6.989154,-35.07144\": read tcp 127.0.0.1:50615->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/28/rota?posicao=-7.067136,-37.281574\": read tcp 127.0.0.1:50600->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/22/rota?posicao=-7.389688,-36.756819\": read tcp 127.0.0.1:50608->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/18/rota?posicao=-7.143156,-34.989478\": read tcp 127.0.0.1:50611->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/40/rota?posicao=-7.221407,-35.888494\": read tcp 127.0.0.1:50613->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/24/rota?posicao=-7.203485,-35.501658\": read tcp 127.0.0.1:50607->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/42/rota?posicao=-7.07947,-37.138494\": read tcp 127.0.0.1:50612->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/26/rota?posicao=-7.217202,-35.868007\": read tcp 127.0.0.1:50599->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/30/rota?posicao=-7.303686,-36.326017\": read tcp 127.0.0.1:50609->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/32/rota?posicao=-7.069171,-36.584399\": read tcp 127.0.0.1:50601->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/33/rota?posicao=-7.208294,-35.946759\": read tcp 127.0.0.1:50605->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/39/rota?posicao=-6.925543,-37.063773\": read tcp 127.0.0.1:50604->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:58-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/29/rota?posicao=-7.080271,-34.984786\": read tcp 127.0.0.1:50602->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:13:59-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/19/rota?posicao=-6.777954,-38.222036\": read tcp 127.0.0.1:50616->127.0.0.1:8090: read: connection reset by peer"
+
+
+  █ THRESHOLDS 
+
+    http_req_duration{fase:medicao,name:inicio}
+    ✓ 'max>=0' max=30s
+
+    http_req_duration{fase:medicao,name:recalculo}
+    ✓ 'max>=0' max=21.78s
+
+    http_req_duration{fase:medicao}
+    ✓ 'max>=0' max=30s
+
+    http_req_failed{fase:medicao}
+    ✓ 'rate>=0' rate=56.88%
+
+    http_reqs{fase:medicao}
+    ✓ 'count>=0' count=218
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 311    3.455456/s
+    checks_succeeded...: 68.16% 212 out of 311
+    checks_failed......: 31.83% 99 out of 311
+
+    ✗ inicio 200
+      ↳  81% — ✓ 43 / ✗ 10
+    ✗ recalculo 200
+      ↳  65% — ✓ 169 / ✗ 89
+
+    HTTP
+    http_req_duration...................: avg=4.28s med=253.5ms p(95)=21.2s  p(99)=25.7s  max=30s   
+      { expected_response:true }........: avg=5.39s med=5.28s   p(95)=20.38s p(99)=21.73s max=21.88s
+      { fase:medicao,name:inicio }......: avg=22.9s med=23.76s  p(95)=30s    p(99)=30s    max=30s   
+      { fase:medicao,name:recalculo }...: avg=4s    med=13.29ms p(95)=11.81s p(99)=21.15s max=21.78s
+      { fase:medicao }..................: avg=5.13s med=14.36ms p(95)=21.61s p(99)=29.14s max=30s   
+    http_req_failed.....................: 35.32% 124 out of 351
+      { fase:medicao }..................: 56.88% 124 out of 218
+    http_reqs...........................: 351    3.899888/s
+      { fase:medicao }..................: 218    2.422153/s
+
+    EXECUTION
+    iteration_duration..................: avg=1m2s  med=1m13s   p(95)=1m29s  p(99)=1m29s  max=1m29s 
+    iterations..........................: 50     0.55554/s
+    vus.................................: 3      min=3          max=40
+    vus_max.............................: 40     min=40         max=40
+
+    NETWORK
+    data_received.......................: 2.2 MB 24 kB/s
+    data_sent...........................: 43 kB  477 B/s
+
+
+

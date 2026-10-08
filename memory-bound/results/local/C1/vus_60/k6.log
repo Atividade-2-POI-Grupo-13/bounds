@@ -1,0 +1,174 @@
+time="2026-10-08T15:14:48-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1016111,-34.8388898&destino=-6.5008681,-37.4465425\": request timeout"
+time="2026-10-08T15:14:49-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1187193,-36.9222366&destino=-6.3461464,-37.4996472\": request timeout"
+time="2026-10-08T15:14:49-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9697805,-37.2753775&destino=-7.5389863,-38.2006248\": request timeout"
+time="2026-10-08T15:14:50-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2679696,-35.9234389&destino=-7.4264535,-35.7458103\": request timeout"
+time="2026-10-08T15:14:50-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.8169825,-38.1182886&destino=-6.2077544,-37.5313354\": request timeout"
+time="2026-10-08T15:14:50-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2307182,-35.9353171&destino=-6.9654355,-37.0107239\": request timeout"
+time="2026-10-08T15:14:51-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.736205,-37.9940958&destino=-7.6640601,-36.6034949\": request timeout"
+time="2026-10-08T15:14:51-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8914917,-38.5697655&destino=-7.4851779,-36.6468568\": request timeout"
+time="2026-10-08T15:14:51-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8434399,-35.1264842&destino=-7.2228911,-37.2360086\": request timeout"
+time="2026-10-08T15:14:52-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.3502687,-37.4930677&destino=-7.0908426,-38.2005619\": request timeout"
+time="2026-10-08T15:14:52-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2322628,-37.2566731&destino=-7.3592867,-37.4468122\": request timeout"
+time="2026-10-08T15:14:53-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3018232,-36.1979663&destino=-7.0553645,-37.2283289\": request timeout"
+time="2026-10-08T15:14:53-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.4600656,-37.4475633&destino=-7.1610975,-34.8040606\": request timeout"
+time="2026-10-08T15:14:53-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1085155,-38.2614326&destino=-6.9521534,-36.2937952\": request timeout"
+time="2026-10-08T15:14:53-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0501657,-37.3084982&destino=-7.2622346,-37.3085593\": request timeout"
+time="2026-10-08T15:14:54-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1754192,-34.8822357&destino=-7.0488974,-37.2962498\": request timeout"
+time="2026-10-08T15:14:54-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2530084,-35.901009&destino=-6.6981952,-38.4517434\": request timeout"
+time="2026-10-08T15:14:55-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.5996194,-36.7871404&destino=-7.3535701,-35.9886374\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.5408074,-38.6103129&destino=-7.3840025,-36.5265611\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/2/rota?posicao=-7.162456,-37.308776\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.155431,-34.8828216&destino=-7.1461844,-34.9178169\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9844394,-35.5426383&destino=-6.8372339,-35.2604292\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.6059497,-38.5328811&destino=-6.7084911,-35.5355921\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0159813,-37.2693586&destino=-7.1648021,-34.964633\": request timeout"
+time="2026-10-08T15:14:57-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/3/rota?posicao=-7.009151,-37.279786\": request timeout"
+time="2026-10-08T15:14:58-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5892157,-37.9124834&destino=-7.3019646,-34.8188936\": request timeout"
+time="2026-10-08T15:14:59-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5607759,-35.1372747&destino=-7.2144905,-35.8797303\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2018101,-34.8834123&destino=-6.34133,-37.7450202\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5196608,-37.8173889&destino=-7.1180788,-38.5003418\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/6/rota?posicao=-7.704589,-38.156961\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.8926195,-37.1198203&destino=-7.9645954,-36.8707924\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7767566,-35.677654&destino=-6.4400806,-36.2030889\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.7276673,-38.0277693&destino=-7.1666563,-35.6775379\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8962794,-38.5575003&destino=-7.1196482,-35.138127\": request timeout"
+time="2026-10-08T15:15:00-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1564297,-35.8553182&destino=-7.1803835,-37.8651631\": request timeout"
+time="2026-10-08T15:15:01-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7767566,-35.677654&destino=-6.4400806,-36.2030889\": request timeout"
+time="2026-10-08T15:15:01-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.4705643,-38.4251292&destino=-7.1627636,-34.9048653\": request timeout"
+time="2026-10-08T15:15:01-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.9097906,-37.1224544&destino=-6.9876344,-35.3050413\": request timeout"
+time="2026-10-08T15:15:02-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.05067,-35.6225168&destino=-7.2537342,-35.8747521\": request timeout"
+time="2026-10-08T15:15:02-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2113692,-35.9363383&destino=-7.4770854,-34.8170505\": request timeout"
+time="2026-10-08T15:15:02-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2475233,-35.3875285&destino=-7.2378377,-35.9097234\": request timeout"
+time="2026-10-08T15:15:02-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9753915,-34.8328896&destino=-7.0298861,-35.4624932\": request timeout"
+time="2026-10-08T15:15:03-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1239687,-35.4298298&destino=-7.0147588,-36.6676612\": request timeout"
+time="2026-10-08T15:15:03-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.4264564,-38.0690134&destino=-6.5185049,-36.0595298\": request timeout"
+time="2026-10-08T15:15:04-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7352895,-35.6479522&destino=-6.787556,-35.0663092\": request timeout"
+time="2026-10-08T15:15:04-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.210211,-36.8332254&destino=-6.6995697,-35.6344611\": request timeout"
+time="2026-10-08T15:15:04-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1638709,-34.8389283&destino=-6.9790375,-38.7239635\": request timeout"
+time="2026-10-08T15:15:04-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3073136,-38.1558294&destino=-6.8725058,-36.9201361\": request timeout"
+time="2026-10-08T15:15:04-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2322628,-37.2566731&destino=-7.3592867,-37.4468122\": request timeout"
+time="2026-10-08T15:15:05-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.210211,-36.8332254&destino=-6.6995697,-35.6344611\": request timeout"
+time="2026-10-08T15:15:06-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2436598,-35.7009061&destino=-6.668214,-35.3777741\": request timeout"
+time="2026-10-08T15:15:06-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.109644,-37.9172516&destino=-6.588459,-35.0648621\": request timeout"
+time="2026-10-08T15:15:06-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9207135,-38.3198895&destino=-6.8514205,-38.3622303\": request timeout"
+time="2026-10-08T15:15:07-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8369357,-35.1250412&destino=-7.2309002,-35.8933209\": request timeout"
+time="2026-10-08T15:15:07-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/7/rota?posicao=-7.121272,-34.909418\": request timeout"
+time="2026-10-08T15:15:07-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/1/rota?posicao=-6.602735,-37.613155\": request timeout"
+time="2026-10-08T15:15:10-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/8/rota?posicao=-6.948674,-37.397146\": request timeout"
+time="2026-10-08T15:15:11-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/5/rota?posicao=-6.938865,-35.828205\": request timeout"
+time="2026-10-08T15:15:17-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/9/rota?posicao=-7.266117,-37.349019\": request timeout"
+time="2026-10-08T15:15:18-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/4/rota?posicao=-7.030759,-37.28486\": request timeout"
+time="2026-10-08T15:15:21-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3073136,-38.1558294&destino=-6.8725058,-36.9201361\": request timeout"
+time="2026-10-08T15:15:22-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8784072,-36.3300038&destino=-7.1788188,-34.8904525\": request timeout"
+time="2026-10-08T15:15:22-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5892157,-37.9124834&destino=-7.3019646,-34.8188936\": request timeout"
+time="2026-10-08T15:15:23-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5196608,-37.8173889&destino=-7.1180788,-38.5003418\": request timeout"
+time="2026-10-08T15:15:23-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7633928,-36.242665&destino=-7.0142003,-38.501941\": request timeout"
+time="2026-10-08T15:15:23-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1638709,-34.8389283&destino=-6.9790375,-38.7239635\": request timeout"
+time="2026-10-08T15:15:24-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2933203,-38.4331799&destino=-6.6833866,-36.4177665\": request timeout"
+time="2026-10-08T15:15:24-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2122127,-35.9633884&destino=-7.2038631,-37.9233637\": request timeout"
+time="2026-10-08T15:15:24-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1759274,-34.816402&destino=-6.616743,-35.2878284\": request timeout"
+time="2026-10-08T15:15:25-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2853185,-34.8013934&destino=-7.1622332,-34.8379073\": request timeout"
+time="2026-10-08T15:15:25-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9374181,-36.4023754&destino=-6.867045,-36.9227394\": request timeout"
+time="2026-10-08T15:15:26-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7890052,-37.5755574&destino=-7.4796285,-36.1279728\": request timeout"
+time="2026-10-08T15:15:26-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.7276673,-38.0277693&destino=-7.1666563,-35.6775379\": request timeout"
+time="2026-10-08T15:15:26-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0497086,-35.3211729&destino=-6.9347826,-37.098011\": request timeout"
+time="2026-10-08T15:15:26-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.8169825,-38.1182886&destino=-6.2077544,-37.5313354\": request timeout"
+time="2026-10-08T15:15:27-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1251129,-34.8611882&destino=-6.7779303,-35.4990455\": request timeout"
+time="2026-10-08T15:15:27-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2018101,-34.8834123&destino=-6.34133,-37.7450202\": request timeout"
+time="2026-10-08T15:15:28-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8372952,-37.6097482&destino=-7.3026048,-37.3893337\": request timeout"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/9/rota?posicao=-7.235527,-37.255128\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/1/rota?posicao=-6.59812,-37.620356\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/7/rota?posicao=-7.083069,-34.981129\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.340747,-35.9088827&destino=-7.1047547,-35.1191369\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7634231,-34.9574447&destino=-7.5152188,-37.6404075\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.3460447,-37.7440217&destino=-7.4360829,-35.6270103\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1757865,-34.8098249&destino=-7.5823617,-37.8471453\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3968037,-34.8069265&destino=-6.4919935,-37.4422199\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/5/rota?posicao=-6.737768,-36.044204\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.3460447,-37.7440217&destino=-7.4360829,-35.6270103\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9710971,-36.9134215&destino=-6.8753777,-36.9350645\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/3/rota?posicao=-6.967268,-36.782326\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/2/rota?posicao=-7.029382,-37.275937\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1614409,-37.31286&destino=-7.5435648,-36.0081707\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1448375,-34.9657245&destino=-7.1042995,-36.2624359\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/6/rota?posicao=-7.641097,-38.198552\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.4572143,-38.3749092&destino=-7.124694,-34.9806774\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0133029,-37.2794621&destino=-7.1946181,-34.8537111\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.5998954,-37.6154213&destino=-7.5229139,-34.8187592\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8129272,-35.0834327&destino=-6.9771792,-36.0663879\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/8/rota?posicao=-7.020887,-37.285249\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.73335,-38.0026641&destino=-7.6362766,-37.877862\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.6059497,-38.5328811&destino=-6.7084911,-35.5355921\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.7489668,-36.7406416&destino=-6.6454551,-35.8763628\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/4/rota?posicao=-6.870454,-36.924523\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8962794,-38.5575003&destino=-7.1196482,-35.138127\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7798602,-38.2470714&destino=-7.1488225,-34.9735054\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.3460447,-37.7440217&destino=-7.4360829,-35.6270103\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2185253,-35.9281146&destino=-7.0738696,-34.8498492\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8784072,-36.3300038&destino=-7.1788188,-34.8904525\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1638709,-34.8389283&destino=-6.9790375,-38.7239635\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1098901,-35.2341939&destino=-7.2321499,-37.3134829\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.5823617,-37.8471453&destino=-7.1541658,-34.8737493\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9695209,-34.8347417&destino=-7.1497489,-35.8481649\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7767566,-35.677654&destino=-6.4400806,-36.2030889\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3821701,-36.9391545&destino=-7.1281563,-35.9794991\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0212476,-37.9533913&destino=-7.0569974,-36.361486\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1599734,-34.8426291&destino=-7.6209976,-37.0165842\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1356157,-35.8505016&destino=-7.017154,-37.301631\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2941913,-35.6134478&destino=-7.2275723,-37.2493689\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1614409,-37.31286&destino=-7.5435648,-36.0081707\": EOF"
+time="2026-10-08T15:15:29-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7767566,-35.677654&destino=-6.4400806,-36.2030889\": EOF"
+
+
+  █ THRESHOLDS 
+
+    http_req_duration{fase:medicao,name:inicio}
+    ✓ 'max>=0' max=30s
+
+    http_req_duration{fase:medicao,name:recalculo}
+    ✓ 'max>=0' max=30s
+
+    http_req_duration{fase:medicao}
+    ✓ 'max>=0' max=30s
+
+    http_req_failed{fase:medicao}
+    ✓ 'rate>=0' rate=100.00%
+
+    http_reqs{fase:medicao}
+    ✓ 'count>=0' count=103
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 165    1.863439/s
+    checks_succeeded...: 9.09%  15 out of 165
+    checks_failed......: 90.90% 150 out of 165
+
+    ✗ inicio 200
+      ↳  8% — ✓ 9 / ✗ 102
+    ✗ recalculo 200
+      ↳  11% — ✓ 6 / ✗ 48
+
+    HTTP
+    http_req_duration...................: avg=19.88s med=26.79s  p(95)=30s   p(99)=30s    max=30s   
+      { expected_response:true }........: avg=8.58s  med=4.06s   p(95)=23.2s p(99)=24.62s max=24.97s
+      { fase:medicao,name:inicio }......: avg=26.61s med=26.44s  p(95)=30s   p(99)=30s    max=30s   
+      { fase:medicao,name:recalculo }...: avg=6.81s  med=29.05ms p(95)=30s   p(99)=30s    max=30s   
+      { fase:medicao }..................: avg=16.02s med=22.31s  p(95)=30s   p(99)=30s    max=30s   
+    http_req_failed.....................: 91.37%  159 out of 174
+      { fase:medicao }..................: 100.00% 103 out of 103
+    http_reqs...........................: 174     1.965081/s
+      { fase:medicao }..................: 103     1.163237/s
+
+    EXECUTION
+    iteration_duration..................: avg=41.38s med=37s     p(95)=1m25s p(99)=1m28s  max=1m28s 
+    iterations..........................: 111     1.253586/s
+    vus.................................: 4       min=4          max=60
+    vus_max.............................: 60      min=60         max=60
+
+    NETWORK
+    data_received.......................: 206 kB  2.3 kB/s
+    data_sent...........................: 24 kB   275 B/s
+
+
+

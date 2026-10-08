@@ -1,0 +1,116 @@
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/42\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1016111,-34.8388898&destino=-6.5008681,-37.4465425\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3140266,-34.9596575&destino=-7.9117362,-36.8538536\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.4661848,-37.4381104&destino=-6.7704891,-38.22603\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0159813,-37.2693586&destino=-7.1648021,-34.964633\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.1496306,-35.0050722&destino=-6.8491625,-35.4944203\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/50\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7302619,-38.4453316&destino=-7.0577655,-35.6256352\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9833931,-37.4240047&destino=-7.8912195,-37.1325566\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/47\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/52\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.6289315,-38.5114682&destino=-7.5731703,-36.8529296\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/48\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/51\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8619596,-38.2627929&destino=-6.5415089,-35.6617392\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.343992,-37.7405729&destino=-7.4147884,-36.0452643\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0834019,-37.4326474&destino=-6.4705836,-36.22609\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/43\": EOF"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/56/rota?posicao=-6.864024,-35.779865\": read tcp 127.0.0.1:52511->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/60/rota?posicao=-7.525008,-37.671174\": read tcp 127.0.0.1:52512->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/83/rota?posicao=-7.05771,-35.315982\": read tcp 127.0.0.1:52514->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/89/rota?posicao=-7.254008,-35.958145\": read tcp 127.0.0.1:52518->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/91/rota?posicao=-6.894648,-35.520582\": read tcp 127.0.0.1:52513->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.3704972,-37.5061877&destino=-6.5336093,-38.0569986\": read tcp 127.0.0.1:52516->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/90/rota?posicao=-6.636975,-37.59794\": read tcp 127.0.0.1:52515->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.0212476,-37.9533913&destino=-7.0569974,-36.361486\": read tcp 127.0.0.1:52519->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/88/rota?posicao=-6.765933,-35.719176\": read tcp 127.0.0.1:52517->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/82/rota?posicao=-6.905096,-37.527934\": read tcp 127.0.0.1:52525->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/79/rota?posicao=-7.084911,-37.439203\": read tcp 127.0.0.1:52520->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/81/rota?posicao=-7.249522,-35.657337\": read tcp 127.0.0.1:52524->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.2321784,-35.8800735&destino=-6.5418006,-37.7176739\": read tcp 127.0.0.1:52526->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/80/rota?posicao=-7.214565,-35.590449\": read tcp 127.0.0.1:52521->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/71/rota?posicao=-7.187122,-35.20294\": read tcp 127.0.0.1:52529->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.6139207,-35.2933645&destino=-6.7432096,-35.6292868\": read tcp 127.0.0.1:52527->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8848548,-38.5590581&destino=-7.0916469,-35.2187603\": read tcp 127.0.0.1:52522->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.9697805,-37.2753775&destino=-7.5389863,-38.2006248\": read tcp 127.0.0.1:52528->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/62/rota?posicao=-7.117975,-34.97289\": read tcp 127.0.0.1:52536->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.8696668,-36.9103149&destino=-7.1532574,-34.978551\": read tcp 127.0.0.1:52523->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/70/rota?posicao=-6.885474,-36.895893\": read tcp 127.0.0.1:52531->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/64/rota?posicao=-7.239809,-37.255694\": read tcp 127.0.0.1:52533->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/72/rota?posicao=-7.165309,-36.045853\": read tcp 127.0.0.1:52532->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/65/rota?posicao=-7.261635,-35.712145\": read tcp 127.0.0.1:52534->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/66/rota?posicao=-6.840854,-38.315287\": read tcp 127.0.0.1:52530->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/61/rota?posicao=-7.426869,-36.564329\": read tcp 127.0.0.1:52537->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/63/rota?posicao=-7.262201,-37.15458\": read tcp 127.0.0.1:52535->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/53\": read tcp 127.0.0.1:52538->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7290675,-35.6907459&destino=-6.8754973,-36.9315164\": read tcp 127.0.0.1:52539->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:30-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/73/rota?posicao=-7.268641,-35.795289\": read tcp 127.0.0.1:52540->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/54\": read tcp 127.0.0.1:52541->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7507944,-35.4367117&destino=-7.5106288,-36.9628331\": read tcp 127.0.0.1:52542->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/75/rota?posicao=-7.113876,-37.027075\": read tcp 127.0.0.1:52543->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/67/rota?posicao=-7.186064,-35.2912\": read tcp 127.0.0.1:52544->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/74/rota?posicao=-6.938011,-35.536603\": read tcp 127.0.0.1:52545->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/92/rota?posicao=-6.778773,-38.239807\": read tcp 127.0.0.1:52546->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/76/rota?posicao=-7.292825,-37.027995\": read tcp 127.0.0.1:52547->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/68/rota?posicao=-7.205617,-34.859651\": read tcp 127.0.0.1:52548->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/69/rota?posicao=-6.925543,-37.063773\": read tcp 127.0.0.1:52549->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/55\": read tcp 127.0.0.1:52550->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-7.7276673,-38.0277693&destino=-7.1666563,-35.6775379\": read tcp 127.0.0.1:52551->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Delete \"http://localhost:8090/viagens/57\": read tcp 127.0.0.1:52552->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Post \"http://localhost:8090/viagens?origem=-6.7545621,-38.2408085&destino=-6.8944688,-35.4636888\": read tcp 127.0.0.1:52553->127.0.0.1:8090: read: connection reset by peer"
+time="2026-10-08T15:24:31-03:00" level=warning msg="Request Failed" error="Get \"http://localhost:8090/viagens/93/rota?posicao=-7.25864,-36.239785\": read tcp 127.0.0.1:52554->127.0.0.1:8090: read: connection reset by peer"
+
+
+  █ THRESHOLDS 
+
+    http_req_duration{fase:medicao,name:inicio}
+    ✓ 'max>=0' max=7.82s
+
+    http_req_duration{fase:medicao,name:recalculo}
+    ✓ 'max>=0' max=7.63s
+
+    http_req_duration{fase:medicao}
+    ✓ 'max>=0' max=7.82s
+
+    http_req_failed{fase:medicao}
+    ✓ 'rate>=0' rate=25.37%
+
+    http_reqs{fase:medicao}
+    ✓ 'count>=0' count=871
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 904    11.068522/s
+    checks_succeeded...: 80.97% 732 out of 904
+    checks_failed......: 19.02% 172 out of 904
+
+    ✗ inicio 200
+      ↳  85% — ✓ 126 / ✗ 22
+    ✗ recalculo 200
+      ↳  80% — ✓ 606 / ✗ 150
+
+    HTTP
+    http_req_duration...................: avg=873.13ms med=97.52ms  p(95)=4.7s   p(99)=7.27s  max=7.82s 
+      { expected_response:true }........: avg=804.83ms med=220.12ms p(95)=3.5s   p(99)=7.07s  max=7.82s 
+      { fase:medicao,name:inicio }......: avg=2.56s    med=1.86s    p(95)=7.45s  p(99)=7.66s  max=7.82s 
+      { fase:medicao,name:recalculo }...: avg=551.2ms  med=14.42ms  p(95)=3.49s  p(99)=7.08s  max=7.63s 
+      { fase:medicao }..................: avg=739.07ms med=34.98ms  p(95)=5.08s  p(99)=7.39s  max=7.82s 
+    http_req_failed.....................: 21.45% 221 out of 1030
+      { fase:medicao }..................: 25.37% 221 out of 871
+    http_reqs...........................: 1030   12.611258/s
+      { fase:medicao }..................: 871    10.664472/s
+
+    EXECUTION
+    iteration_duration..................: avg=28.95s   med=30.56s   p(95)=44.89s p(99)=48.46s max=51.64s
+    iterations..........................: 148    1.812103/s
+    vus.................................: 3      min=3           max=60
+    vus_max.............................: 60     min=60          max=60
+
+    NETWORK
+    data_received.......................: 8.1 MB 99 kB/s
+    data_sent...........................: 122 kB 1.5 kB/s
+
+
+
