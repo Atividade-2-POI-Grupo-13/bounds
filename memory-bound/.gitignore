@@ -5,3 +5,4 @@ __pycache__/
 cache/
 data/paraiba_full.map.gz
 data/pontos_paraiba_full.json
+.pacotes/

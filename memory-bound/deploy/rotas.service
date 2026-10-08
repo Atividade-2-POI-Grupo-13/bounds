@@ -1,0 +1,27 @@
+# Unidade systemd do serviço de rotas. O install.sh troca os __MARCADORES__ e
+# copia para /etc/systemd/system/rotas.service.
+#
+# Restart=always: se o processo for morto por falta de memória (OOM killer),
+# ele volta sozinho e o experimento continua. Os reinícios viram dado
+# (systemctl show rotas -p NRestarts).
+[Unit]
+Description=Servico de rotas memory-bound (Atividade 2)
+After=network.target
+
+[Service]
+User=__USUARIO__
+WorkingDirectory=__PASTA__
+ExecStart=__PYTHON__ -m app.main
+Environment=PYTHONPATH=__PYTHONPATH__
+Environment=MAP_FILE=data/paraiba.map.gz
+Environment=PORT=8000
+Environment=MAX_CONCURRENT=0
+Environment=MAX_ALCANCE_MIN=60
+Environment=CAPACIDADE_VIA=2
+Environment=ARVORE_VALIDADE_S=60
+Environment=VIAGEM_EXPIRA_S=300
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
