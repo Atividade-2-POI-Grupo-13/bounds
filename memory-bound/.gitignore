@@ -3,3 +3,5 @@ __pycache__/
 .pytest_cache/
 # cache de downloads do osmnx
 cache/
+data/paraiba_full.map.gz
+data/pontos_paraiba_full.json

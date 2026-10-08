@@ -4,7 +4,7 @@ Para cada mapa e endpoint, sobe um servidor novo e mede:
   - RSS logo depois de carregar o mapa (base);
   - memória estimada de uma requisição (média e máxima, vinda da própria resposta);
   - tempo de CPU médio de uma requisição;
-  - quanto o RSS cresce com 1, 5, 10 e 20 requisições simultâneas.
+  - quanto o RSS cresce com 1, 5, 10, 20 e 40 requisições simultâneas.
 
 Exemplo:
     python tools/calibrate.py data/campina_grande.map.gz data/paraiba.map.gz --minutos 15
@@ -25,7 +25,7 @@ import psutil
 
 PORTA = 8011
 URL = f"http://127.0.0.1:{PORTA}"
-NIVEIS = [1, 5, 10, 20]
+NIVEIS = [1, 5, 10, 20, 40]
 
 
 def get_json(caminho: str) -> dict:
@@ -92,9 +92,23 @@ def calibrar(mapa: str, pontos: list[dict], endpoint: str, minutos: float, amost
     try:
         saude = get_json("/health")
         base = processo.memory_info().rss / 1_000_000
-
-        # Requisições uma de cada vez: memória estimada e CPU por requisição.
         rng = random.Random(1)
+
+        # Primeiro as requisições simultâneas, em níveis crescentes, com o servidor
+        # recém-iniciado. O RSS não diminui entre níveis (o Python reaproveita a memória
+        # liberada), então o pico de cada nível mostra a memória de N requisições vivas
+        # ao mesmo tempo.
+        crescimento: dict[int, float] = {}
+        duracao_nivel: dict[int, float] = {}
+        for n in NIVEIS:
+            caminhos: list[str] = []
+            for _ in range(n):
+                caminhos.append(caminho_requisicao(endpoint, rng.choice(pontos), minutos))
+            pico, dur = rodada_simultanea(processo, caminhos)
+            crescimento[n] = max(0.0, pico - base)
+            duracao_nivel[n] = dur
+
+        # Depois, uma de cada vez: memória estimada e CPU por requisição.
         memorias: list[float] = []
         visitados: list[int] = []
         cpu_antes = processo.cpu_times()
@@ -106,19 +120,6 @@ def calibrar(mapa: str, pontos: list[dict], endpoint: str, minutos: float, amost
         duracao = time.perf_counter() - inicio
         cpu_depois = processo.cpu_times()
         cpu_total = (cpu_depois.user - cpu_antes.user) + (cpu_depois.system - cpu_antes.system)
-
-        # Requisições simultâneas, em níveis crescentes. O RSS não diminui entre níveis
-        # (o Python reaproveita a memória liberada), então o pico de cada nível mostra
-        # a memória de N requisições vivas ao mesmo tempo.
-        crescimento: dict[int, float] = {}
-        duracao_nivel: dict[int, float] = {}
-        for n in NIVEIS:
-            caminhos: list[str] = []
-            for _ in range(n):
-                caminhos.append(caminho_requisicao(endpoint, rng.choice(pontos), minutos))
-            pico, dur = rodada_simultanea(processo, caminhos)
-            crescimento[n] = max(0.0, pico - base)
-            duracao_nivel[n] = dur
     finally:
         proc.terminate()
         proc.wait()
