@@ -39,7 +39,9 @@ if python3 -c "import ensurepip, venv" 2> /dev/null; then
   echo "== Criando .venv"
   python3 -m venv --clear .venv
   if [ "$TEM_WHEELS" = 1 ]; then
-    .venv/bin/pip install -q --no-index --find-links "$WHEELS" -r requirements.txt
+    # Se as wheels não servirem (outra arquitetura, versão faltando), tenta pela internet.
+    .venv/bin/pip install -q --no-index --find-links "$WHEELS" -r requirements.txt \
+      || .venv/bin/pip install -q -r requirements.txt
   else
     .venv/bin/pip install -q -r requirements.txt
   fi
