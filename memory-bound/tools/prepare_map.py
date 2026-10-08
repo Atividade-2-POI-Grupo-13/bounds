@@ -69,7 +69,7 @@ def main() -> None:
     parser.add_argument("--dist-max-km", type=float, default=0,
                         help="Distância máxima em linha reta entre origem e destino (0 = sem limite)")
     parser.add_argument("--semente", type=int, default=42)
-    parser.add_argument("--pbf", help="Arquivo .osm.pbf local, em vez de baixar do Overpass")
+    parser.add_argument("--pbf", help="Lê a rede viária deste arquivo .osm.pbf local, sem consultar o Overpass")
     args = parser.parse_args()
 
     if args.pbf:

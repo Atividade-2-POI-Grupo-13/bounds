@@ -45,7 +45,7 @@ def vaga():
     """Espera uma vaga para calcular.
 
     Sem limite (MAX_CONCURRENT=0): todas as requisições calculam juntas.
-    Com limite: as que passam do limite esperam a vez (menos memória, mais espera).
+    Com limite: as que passam do limite esperam a vez. A memória fica contida e o tempo de espera cresce.
     """
     if MAX_CONCURRENT <= 0:
         yield
