@@ -35,13 +35,49 @@ Rotas longas em `paraiba` (origem e destino a mais de 200 km): 27 MB em média, 
 - Requisições só se acumulam em memória quando estão em andamento ao mesmo tempo. Com 1 núcleo, isso só acontece quando a CPU já está em 100%. Então a CPU vai aparecer saturada em todos os cenários sob carga. A prova de que a aplicação é memory-bound vem da comparação entre cenários: C2 x C3 (mais RAM) contra C2 x C4 (mais CPU).
 - Com 1 processo Python, a segunda CPU do C4 fica quase ociosa por causa do GIL.
 
-## 4. Estimativa do joelho na VM
+## 4. Decisão: trânsito compartilhado
 
-Supondo cerca de 120 MB usados pelo Ubuntu Server ocioso e o mapa `paraiba` (base 205 MB).
+O código sem trânsito dava cerca de 12 MB por usuário em carga. Com esse valor, a VM de 1 GB só degradaria perto de 55 usuários, e a fila de CPU dominaria o tempo de resposta antes disso.
 
-| opção | memória por usuário em carga | joelho 512 MB | joelho 1 GB | joelho 2 GB |
-|---|---|---|---|---|
-| A: código atual | cerca de 12 MB | cerca de 15 usuários | cerca de 55 | cerca de 140 |
-| B: código atual + pesos por requisição | cerca de 45 MB | cerca de 4 | cerca de 15 | cerca de 38 |
+A aplicação ganhou trânsito compartilhado (`app/traffic.py`):
 
-Pesos por requisição: cada requisição monta a própria lista de custo de cada aresta (um float por aresta, 34 MB em cerca de 80 ms de CPU). Em memória por ms de CPU, isso rende o dobro do Dijkstra.
+- cada `/rota` com `veiculo=ID` registra o veículo nas arestas da rota; um novo pedido do mesmo veículo é um recálculo e troca a rota;
+- `DELETE /veiculos/ID` tira o veículo do trânsito na chegada;
+- o tempo de cada aresta segue a fórmula BPR: `tempo_livre × (1 + 0,15 × (fluxo / CAPACIDADE_VIA)^4)`;
+- cada busca monta a própria foto dos pesos (um float por aresta), para o trânsito não mudar no meio do Dijkstra. Essa foto é a maior estrutura da requisição.
+
+Modelo de memória:
+
+```
+memória total ≈ mapa + fluxo do trânsito + (requisições simultâneas × (foto de pesos + busca))
+```
+
+## 5. Números com trânsito (mapa paraiba)
+
+| endpoint | base MB | mem/req média | mem/req máx | CPU/req | +RSS 1 | +RSS 5 | +RSS 10 | +RSS 20 | +RSS 40 |
+|---|---|---|---|---|---|---|---|---|---|
+| rota | 227 | 49,1 MB | 66,4 MB | 218 ms | 102 | 245 | 436 | 731 | 1.271 |
+| alcance 60 min | 227 | 35,5 MB | 40,5 MB | 151 ms | 42 | 220 | 319 | 386 | 681 |
+
+Efeito da cascata (15 rotas de teste, capacidade 2):
+
+| veículos ativos | nós visitados por busca | tempo com trânsito / tempo livre |
+|---|---|---|
+| 0 | 103.728 | 1,00 |
+| 20 | 109.341 | 1,07 |
+| 40 | 109.689 | 1,07 |
+| 80 | 109.038 | 1,06 |
+
+O trânsito aumenta a busca em cerca de 5%. O peso maior da cascata na carga vem dos recálculos: cada usuário faz várias requisições por viagem.
+
+## 6. Estimativa do joelho na VM
+
+Supondo cerca de 120 MB usados pelo Ubuntu Server ocioso e cerca de 30 MB por requisição simultânea (coluna +RSS).
+
+| VM | sobra para requisições | joelho estimado |
+|---|---|---|
+| 512 MB | cerca de 165 MB | cerca de 5 usuários |
+| 1 GB | cerca de 680 MB | cerca de 20 usuários |
+| 2 GB | cerca de 1.700 MB | cerca de 55 usuários |
+
+Recomendação: mapa `paraiba`, endpoint principal `/rota` com veículos e recálculos, `/alcance 60` como segundo peso. Níveis de demanda: 1, 2, 5, 10, 20, 40 e 60. Os tempos de CPU no LCC3 devem ser 2 a 3 vezes maiores que os do Mac.

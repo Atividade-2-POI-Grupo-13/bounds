@@ -1,4 +1,4 @@
-"""Serviço de rotas: rotas HTTP.
+"""Serviço de rotas com trânsito: rotas HTTP.
 
 Os endpoints são síncronos (def). O FastAPI roda cada um numa thread do pool,
 então várias rotas ficam em andamento ao mesmo tempo e a memória delas se soma.
@@ -14,6 +14,7 @@ from fastapi import FastAPI, HTTPException
 from app import metrics
 from app.graph import load_graph
 from app.routing import isochrone, shortest_path
+from app.traffic import Transito
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("rotas")
@@ -21,11 +22,13 @@ log = logging.getLogger("rotas")
 MAP_FILE = os.environ.get("MAP_FILE", "data/campina_grande.map.gz")
 MAX_CONCURRENT = int(os.environ.get("MAX_CONCURRENT", "0"))
 MAX_ALCANCE_MIN = float(os.environ.get("MAX_ALCANCE_MIN", "30"))
+CAPACIDADE_VIA = float(os.environ.get("CAPACIDADE_VIA", "2"))
 
 log.info("carregando mapa %s", MAP_FILE)
 graph = load_graph(MAP_FILE)
 log.info("mapa carregado: %d nós, %d arestas, RSS do processo %.1f MB",
          graph.num_nodes, graph.num_edges, metrics.rss_mb())
+transito = Transito(graph, CAPACIDADE_VIA)
 
 semaforo = threading.BoundedSemaphore(max(MAX_CONCURRENT, 1))
 
@@ -78,16 +81,35 @@ def health():
 
 
 @app.get("/rota")
-def rota(origem: str, destino: str):
+def rota(origem: str, destino: str, veiculo: str | None = None):
+    """Melhor rota com o trânsito de agora.
+
+    Com `veiculo`, a rota passa a contar no trânsito (e substitui a rota anterior
+    desse veículo, se ele estiver recalculando).
+    """
     with metrics.track("rota") as info:
         no_origem = no_mais_proximo(origem)
         no_destino = no_mais_proximo(destino)
         with vaga():
-            resultado = shortest_path(graph, no_origem, no_destino)
+            pesos = transito.foto_pesos()
+            resultado = shortest_path(graph, pesos, no_origem, no_destino)
+            # Solta a foto antes de liberar a vaga, para MAX_CONCURRENT limitar a memória de fato.
+            del pesos
         if resultado is None:
             raise HTTPException(404, "não há caminho entre os pontos")
+        arestas = resultado.pop("arestas")
+        if veiculo is not None:
+            transito.registrar(veiculo, arestas)
         info["nos_visitados"] = resultado["nos_visitados"]
         return resultado
+
+
+@app.delete("/veiculos/{veiculo}")
+def chegada(veiculo: str):
+    """O veículo chegou ao destino: sai do trânsito."""
+    if not transito.remover(veiculo):
+        raise HTTPException(404, f"veículo {veiculo!r} não está em rota")
+    return {"veiculo": veiculo, "status": "chegou"}
 
 
 @app.get("/alcance")
@@ -97,14 +119,18 @@ def alcance(origem: str, minutos: float = 15):
             raise HTTPException(400, f"minutos deve estar entre 0 e {MAX_ALCANCE_MIN:g}")
         no_origem = no_mais_proximo(origem)
         with vaga():
-            resultado = isochrone(graph, no_origem, minutos)
+            pesos = transito.foto_pesos()
+            resultado = isochrone(graph, pesos, no_origem, minutos)
+            del pesos
         info["nos_visitados"] = resultado["nos_visitados"]
         return resultado
 
 
 @app.get("/metrics")
 def metrics_endpoint():
-    return metrics.snapshot()
+    dados = metrics.snapshot()
+    dados["veiculos_ativos"] = transito.veiculos_ativos()
+    return dados
 
 
 if __name__ == "__main__":
