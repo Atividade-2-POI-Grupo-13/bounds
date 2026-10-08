@@ -97,8 +97,17 @@ Cada execução gera `data/NOME.map.gz` e `data/pontos_NOME.json` (300 pares de 
 
 ## 7. Experimentos no LCC3
 
-1. Criar a VM e instalar: `deploy/README.md`.
-2. No hospedeiro, copiar a chave ssh para a VM uma vez: `ssh-copy-id -p 2222 osboxes@localhost`.
-3. Baixar o k6 para a home (sem root): binário único em https://github.com/grafana/k6/releases, e exportar `K6=~/bin/k6`.
-4. Rodar tudo: `experiments/run_all.sh`. Ele mostra o tempo estimado antes de começar. Com o padrão (4 cenários, 7 níveis, 3 repetições) dá cerca de 3 h; com `REPETICOES=2`, cerca de 2 h.
-5. No Mac: `python analysis/analyze.py`.
+Roteiro para o dia, no hospedeiro Linux:
+
+1. Criar a VM e instalar a aplicação: `deploy/README.md`. No fim, o `install.sh` avisa se a VM tem ssh.
+2. k6 na home, sem root: `experiments/instalar_k6.sh` e `export K6=~/bin/k6`. Sem internet no LCC3, levar o `~/bin/k6` no pendrive.
+3. Com ssh na VM, copiar a chave uma vez: `ssh-copy-id -p 2222 osboxes@localhost` (senha `osboxes.org`).
+4. Teste de fumaça (uns 6 minutos): `experiments/teste_fumaca.sh`. Ele confere as ferramentas e o ssh, mede a memória livre da VM do C1 e a CPU na máquina do LCC3, e imprime o comando do `run_all.sh` já ajustado:
+   - RAM do C1: troca para 768 MB se 512 MB deixar folga para menos de 3 viagens;
+   - `PAUSA_S`: aumenta se a CPU passar de 60% no maior nível;
+   - `REPETICOES=2` se 3 repetições passarem de 2h30;
+   - `SEM_SSH=1` se a VM estiver sem ssh.
+5. Rodar o comando sugerido. O `run_all.sh` faz uma repetição completa de todos os cenários antes da próxima. Se for interrompido, rodar o mesmo comando de novo continua de onde parou.
+6. No Mac: `python analysis/analyze.py`.
+
+Sem ssh na VM (`SEM_SSH=1`): o serviço reinicia entre níveis por `POST /admin/reiniciar` (liberado só pela variável `PERMITIR_REINICIO=1` do serviço), a memória, o swap e a CPU da VM vêm do `/metrics` lido pelo hospedeiro, e os reinícios por falta de memória são contados pela mudança de `inicio_epoch`. Ficam faltando o `vmstat` e as mensagens do OOM killer. Enquanto o processo está reiniciando, não há amostra.

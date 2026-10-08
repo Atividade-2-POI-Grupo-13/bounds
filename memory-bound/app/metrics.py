@@ -1,4 +1,8 @@
-"""Contadores da aplicação e uso de memória/CPU do processo (exposto em /metrics)."""
+"""Contadores da aplicação e uso de memória/CPU do processo e da máquina (exposto em /metrics).
+
+Os dados da máquina inteira (memória, swap, CPU) deixam o hospedeiro monitorar a VM
+só pela porta da aplicação, mesmo sem ssh.
+"""
 
 import logging
 import resource
@@ -12,6 +16,9 @@ import psutil
 log = logging.getLogger("rotas")
 
 _processo = psutil.Process()
+# A primeira leitura de CPU do psutil sempre dá 0: faz agora, para o primeiro /metrics já valer.
+_processo.cpu_percent(interval=None)
+psutil.cpu_percent(interval=None)
 _trava = threading.Lock()
 _inicio = time.time()
 
@@ -89,4 +96,23 @@ def snapshot() -> dict:
         "total": total,
         "erros": erros,
         "uptime_s": round(time.time() - _inicio, 1),
+        # Muda quando o processo reinicia (por exemplo, morto por falta de memória).
+        "inicio_epoch": int(_inicio),
+        "sistema": sistema(),
+    }
+
+
+def sistema() -> dict:
+    """Memória, swap e CPU da máquina inteira (na VM: a VM toda)."""
+    memoria = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+    return {
+        "mem_total_mb": round(memoria.total / 1_000_000, 1),
+        "mem_usada_mb": round((memoria.total - memoria.available) / 1_000_000, 1),
+        "mem_disponivel_mb": round(memoria.available / 1_000_000, 1),
+        "swap_total_mb": round(swap.total / 1_000_000, 1),
+        "swap_usado_mb": round(swap.used / 1_000_000, 1),
+        # % de CPU da máquina desde a última consulta (100 = todos os núcleos ocupados).
+        "cpu_percent": psutil.cpu_percent(interval=None),
+        "cpus": psutil.cpu_count(),
     }

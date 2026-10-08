@@ -50,6 +50,14 @@ scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/
 
 Se a VM tiver internet, também dá para clonar direto dentro dela com `git clone`.
 
+Se a VM não tiver ssh (o `scp` falha), o hospedeiro serve o projeto por HTTP e a VM baixa pela rede NAT, onde o hospedeiro é `10.0.2.2`:
+
+```
+deploy/servir_projeto.sh
+```
+
+O script mostra o comando para digitar no console da VM (baixa, descompacta e roda o `install.sh`). Depois, os experimentos rodam com `SEM_SSH=1` (ver o `README.md` do projeto, seção 7).
+
 ## 4. Instalar
 
 ```
@@ -63,6 +71,7 @@ O script:
 - tenta instalar `python3-venv` e `sysstat` com apt;
 - cria a `.venv` e instala as dependências a partir de `deploy/wheels/`, sem precisar de internet;
 - sem `python3-venv` e sem internet, descompacta as wheels em `.pacotes/` e usa essa pasta no `PYTHONPATH`;
+- tenta instalar o `openssh-server` se ele faltar e houver internet;
 - instala e liga o serviço `rotas` no systemd;
 - espera `/health` responder;
 - mostra a memória e o swap da VM.
@@ -106,6 +115,7 @@ As variáveis ficam em `deploy/rotas.service`. Depois de mudar, rodar `./deploy/
 | `CAPACIDADE_VIA` | `2` | veículos por aresta antes de o trânsito pesar |
 | `ARVORE_VALIDADE_S` | `60` | idade máxima da árvore de uma viagem antes de refazer |
 | `VIAGEM_EXPIRA_S` | `300` | viagem sem uso por esse tempo é encerrada |
+| `PERMITIR_REINICIO` | `1` | libera `POST /admin/reiniciar`, usado entre níveis quando a VM não tem ssh |
 
 ## 8. Ensaio no Mac com UTM
 

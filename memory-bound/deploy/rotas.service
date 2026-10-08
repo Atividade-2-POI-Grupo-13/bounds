@@ -20,6 +20,8 @@ Environment=MAX_ALCANCE_MIN=60
 Environment=CAPACIDADE_VIA=2
 Environment=ARVORE_VALIDADE_S=60
 Environment=VIAGEM_EXPIRA_S=300
+# Permite reiniciar pela API (POST /admin/reiniciar) quando não há ssh na VM.
+Environment=PERMITIR_REINICIO=1
 Restart=always
 RestartSec=2
 

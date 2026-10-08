@@ -5,7 +5,7 @@
 # Uso: experiments/cenario.sh NOME CPUS RAM_MB
 #   ex.: experiments/cenario.sh C1 1 512
 #
-# Salva em results/raw/NOME/vm.txt a memória, o swap e as CPUs que a VM enxerga.
+# Salva em $RESULTADOS/NOME/vm.txt (padrão results/raw) a memória, o swap e as CPUs que a VM enxerga.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source experiments/comum.sh
@@ -39,15 +39,34 @@ if [ "$(estado_vm)" = "running" ]; then
 fi
 
 echo "== $nome: aplicando $cpus CPU e $ram_mb MB"
-"$VBOXMANAGE" modifyvm "$VM" --cpus "$cpus" --memory "$ram_mb"
+# Logo depois de desligar, a VM pode continuar travada por alguns segundos: tenta de novo.
+# O IO-APIC precisa estar ligado para a VM subir com mais de 1 CPU.
+aplicado=0
+for _ in $(seq 1 10); do
+  if "$VBOXMANAGE" modifyvm "$VM" --ioapic on --cpus "$cpus" --memory "$ram_mb"; then
+    aplicado=1
+    break
+  fi
+  sleep 3
+done
+if [ "$aplicado" = 0 ]; then
+  echo "ERRO: modifyvm falhou 10 vezes" >&2
+  exit 1
+fi
 "$VBOXMANAGE" startvm "$VM" --type headless > /dev/null
 
 echo "== $nome: esperando a aplicação"
 esperar_health 300
 
-mkdir -p "results/raw/$nome"
+mkdir -p "$RESULTADOS/$nome"
 {
   echo "cenario=$nome cpus=$cpus ram_mb=$ram_mb data=$(date -Iseconds)"
-  na_vm "nproc; free -m; swapon --show"
-} > "results/raw/$nome/vm.txt"
-cat "results/raw/$nome/vm.txt"
+  if [ "$SEM_SSH" = 1 ]; then
+    echo "sem ssh; dados do /metrics:"
+    curl -s -m 5 "$BASE_URL/metrics"
+    echo
+  else
+    na_vm "nproc; free -m; swapon --show"
+  fi
+} > "$RESULTADOS/$nome/vm.txt"
+cat "$RESULTADOS/$nome/vm.txt"

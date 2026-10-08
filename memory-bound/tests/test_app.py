@@ -168,3 +168,9 @@ def test_endpoint_metrics_conta_requisicoes_e_erros():
     assert depois["total"] == antes["total"] + 2
     assert depois["erros"] == antes["erros"] + 1
     assert depois["rss_mb"] > 0
+    assert depois["sistema"]["mem_total_mb"] > 0
+    assert depois["inicio_epoch"] > 0
+
+
+def test_reinicio_pela_api_desligado_por_padrao():
+    assert client.post("/admin/reiniciar").status_code == 403

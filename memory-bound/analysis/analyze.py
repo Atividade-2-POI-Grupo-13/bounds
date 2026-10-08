@@ -28,6 +28,11 @@ TITULO = "#0b0b0b"
 GRADE = "#e4e3df"
 FUNDO = "#fcfcfb"
 
+# Tudo em MB decimal (10^6 bytes), como o /metrics da aplicação.
+# vmstat mostra KiB e free -m mostra MiB.
+KIB_PARA_MB = 1024 / 1_000_000
+MIB_PARA_MB = 1024 * 1024 / 1_000_000
+
 
 # ---------- leitura dos arquivos de um nível ----------
 
@@ -52,7 +57,7 @@ def ram_total_mb(arquivo_vm: str) -> float:
     with open(arquivo_vm) as f:
         for linha in f:
             if linha.startswith("Mem:"):
-                return float(linha.split()[1])
+                return float(linha.split()[1]) * MIB_PARA_MB
     return 0.0
 
 
@@ -99,9 +104,48 @@ def ler_vmstat(arquivo: str, aquecimento_s: int, total_mb: float) -> dict:
                 ocioso = int(partes[14])
                 cpus.append(100 - ocioso)
                 if total_mb > 0:
-                    memorias.append(total_mb - (livre + buff + cache) / 1024)
-                swap_max = max(swap_max, swpd / 1024)
+                    memorias.append(total_mb - (livre + buff + cache) * KIB_PARA_MB)
+                swap_max = max(swap_max, swpd * KIB_PARA_MB)
     return {
+        "cpu_media_pct": media(cpus),
+        "cpu_max_pct": max(cpus) if cpus else math.nan,
+        "mem_media_mb": media(memorias),
+        "mem_max_mb": max(memorias) if memorias else math.nan,
+        "swap_max_mb": swap_max,
+    }
+
+
+def ler_metrics_host(arquivo: str, aquecimento_s: int) -> dict:
+    """CPU, memória, swap e RAM total da VM pelo /metrics lido do hospedeiro.
+
+    Usado quando não há vmstat (VM sem ssh). Amostras depois do aquecimento.
+    """
+    cpus: list[float] = []
+    memorias: list[float] = []
+    swap_max = 0.0
+    total_mb = 0.0
+    amostra = 0
+    if os.path.exists(arquivo):
+        with open(arquivo) as f:
+            for linha in f:
+                partes = linha.split(" ", 1)
+                if len(partes) < 2:
+                    continue
+                amostra += 1
+                try:
+                    sistema = json.loads(partes[1]).get("sistema")
+                except json.JSONDecodeError:
+                    continue
+                if not sistema:
+                    continue  # a aplicação não respondeu nesse segundo
+                total_mb = sistema["mem_total_mb"]
+                if amostra <= aquecimento_s:
+                    continue
+                cpus.append(sistema["cpu_percent"])
+                memorias.append(sistema["mem_usada_mb"])
+                swap_max = max(swap_max, sistema["swap_usado_mb"])
+    return {
+        "ram_vm_mb": total_mb,
         "cpu_media_pct": media(cpus),
         "cpu_max_pct": max(cpus) if cpus else math.nan,
         "mem_media_mb": media(memorias),
@@ -173,8 +217,16 @@ def ler_tudo(pasta_raw: str, aquecimento_s: int, medicao_s: float) -> list[dict]
                         "ram_vm_mb": total_mb,
                     }
                     linha.update(ler_k6(os.path.join(pasta, "k6.json"), medicao_s))
-                    linha.update(ler_vmstat(os.path.join(pasta, "vmstat.txt"), aquecimento_s, total_mb))
-                    linha["rss_max_mb"] = ler_rss_max(os.path.join(pasta, "metrics.txt"))
+                    # Com ssh: vmstat de dentro da VM. Sem ssh: /metrics lido do hospedeiro.
+                    vmstat = os.path.join(pasta, "vmstat.txt")
+                    metrics_vm = os.path.join(pasta, "metrics.txt")
+                    if not os.path.exists(metrics_vm):
+                        metrics_vm = os.path.join(pasta, "metrics_host.txt")
+                    if os.path.exists(vmstat) and os.path.getsize(vmstat) > 0:
+                        linha.update(ler_vmstat(vmstat, aquecimento_s, total_mb))
+                    else:
+                        linha.update(ler_metrics_host(os.path.join(pasta, "metrics_host.txt"), aquecimento_s))
+                    linha["rss_max_mb"] = ler_rss_max(metrics_vm)
                     linha["reinicios"] = estado.get("reinicios", "")
                     linha["mensagens_oom"] = estado.get("mensagens_oom", "")
                     linhas.append(linha)

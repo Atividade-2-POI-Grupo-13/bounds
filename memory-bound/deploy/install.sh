@@ -19,10 +19,21 @@ cd "$PASTA"
 
 echo "== Projeto em $PASTA, serviço vai rodar como $USUARIO"
 
-# Pacotes do sistema: só funciona com internet. Sem internet, segue sem eles.
-if ! python3 -c "import ensurepip, venv" 2> /dev/null || ! command -v sar > /dev/null; then
-  echo "== Tentando instalar python3-venv e sysstat com apt"
-  if sudo apt-get update -qq && sudo apt-get install -y -qq python3-venv sysstat; then
+# Pacotes do sistema que faltarem: só funciona com internet. Sem internet, segue sem eles.
+pacotes=""
+if ! python3 -c "import ensurepip, venv" 2> /dev/null; then
+  pacotes="$pacotes python3-venv"
+fi
+if ! command -v sar > /dev/null; then
+  pacotes="$pacotes sysstat"
+fi
+if ! systemctl list-unit-files ssh.service 2> /dev/null | grep -q '^ssh.service'; then
+  pacotes="$pacotes openssh-server"  # os scripts de experimento coletam dados por ssh
+fi
+if [ -n "$pacotes" ]; then
+  echo "== Tentando instalar com apt:$pacotes"
+  # shellcheck disable=SC2086
+  if sudo apt-get update -qq && sudo apt-get install -y -qq $pacotes; then
     echo "apt ok"
   else
     echo "apt falhou (sem internet?), seguindo sem os pacotes"
@@ -81,6 +92,11 @@ for _ in $(seq 1 60); do
     echo "== Memória e swap da VM (registrar no relatório; não mudar entre cenários)"
     free -h
     swapon --show || true
+    if systemctl is-active -q ssh 2> /dev/null; then
+      echo "== ssh ativo: os experimentos podem coletar vmstat e o log do kernel"
+    else
+      echo "== AVISO: a VM está sem ssh. No hospedeiro, rode os experimentos com SEM_SSH=1"
+    fi
     exit 0
   fi
   sleep 1

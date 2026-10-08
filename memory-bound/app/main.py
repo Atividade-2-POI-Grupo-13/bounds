@@ -27,6 +27,8 @@ MAX_ALCANCE_MIN = float(os.environ.get("MAX_ALCANCE_MIN", "60"))
 CAPACIDADE_VIA = float(os.environ.get("CAPACIDADE_VIA", "2"))
 ARVORE_VALIDADE_S = float(os.environ.get("ARVORE_VALIDADE_S", "60"))
 VIAGEM_EXPIRA_S = float(os.environ.get("VIAGEM_EXPIRA_S", "300"))
+# Só para os experimentos: permite reiniciar o processo pela API quando não há ssh na VM.
+PERMITIR_REINICIO = os.environ.get("PERMITIR_REINICIO", "0") == "1"
 
 log.info("carregando mapa %s", MAP_FILE)
 graph = load_graph(MAP_FILE)
@@ -155,6 +157,20 @@ def alcance(origem: str, minutos: float = 15):
             del pesos
         info["nos_visitados"] = resultado["nos_visitados"]
         return resultado
+
+
+@app.post("/admin/reiniciar")
+def reiniciar():
+    """Encerra o processo para o systemd subir de novo com a memória limpa.
+
+    Usado entre níveis do experimento quando não há ssh na VM. Desligado por padrão.
+    """
+    if not PERMITIR_REINICIO:
+        raise HTTPException(403, "reinício pela API desligado (PERMITIR_REINICIO=0)")
+    log.info("reinício pedido pela API")
+    # Sai meio segundo depois, para a resposta chegar ao cliente.
+    threading.Timer(0.5, os._exit, args=(0,)).start()
+    return {"status": "reiniciando"}
 
 
 @app.get("/metrics")

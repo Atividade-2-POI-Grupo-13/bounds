@@ -10,6 +10,7 @@ SENHA_VM="${SENHA_VM:-osboxes.org}"     # senha pública da imagem, usada só no
 PASTA_VM="${PASTA_VM:-memory-bound-rotas}"  # pasta do projeto dentro da VM (a partir da home)
 VBOXMANAGE="${VBOXMANAGE:-VBoxManage}"
 BASE_URL="${BASE_URL:-http://$HOST_VM:$PORTA_APP}"
+RESULTADOS="${RESULTADOS:-results/raw}"  # onde cenario.sh e run_level.sh gravam
 export BASE_URL
 
 # A VM é recriada a cada ida ao LCC, então a chave do host muda: não guardar.
@@ -43,4 +44,34 @@ esperar_health() {
   done
   echo "ERRO: $BASE_URL/health não respondeu em $limite s" >&2
   return 1
+}
+
+# SEM_SSH=1: a VM não tem ssh. O serviço reinicia pela API e a coleta vem só do
+# /metrics (memória, swap e CPU da VM inteira), lido pelo hospedeiro.
+SEM_SSH="${SEM_SSH:-0}"
+
+reiniciar_servico() {
+  if [ "$SEM_SSH" = 1 ]; then
+    curl -sf -m 5 -X POST "$BASE_URL/admin/reiniciar" > /dev/null
+    sleep 3
+  else
+    sudo_na_vm systemctl restart rotas
+  fi
+}
+
+coletar_metrics_host() {
+  # Uma linha por segundo: "tempo json" do /metrics, lido de fora da VM.
+  local arquivo="$1"
+  : > "$arquivo"
+  while true; do
+    echo "$(date +%s) $(curl -s -m 2 "$BASE_URL/metrics" || echo "{}")" >> "$arquivo"
+    sleep 1
+  done
+}
+
+contar_reinicios() {
+  # Quantas vezes o inicio_epoch do processo mudou ao longo do arquivo do coletor.
+  grep -o '"inicio_epoch":[0-9]*' "$1" | awk -F: '
+    { if (anterior != "" && $2 != anterior) { mudancas++ }; anterior = $2 }
+    END { print mudancas + 0 }'
 }
