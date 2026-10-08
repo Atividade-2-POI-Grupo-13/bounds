@@ -67,10 +67,8 @@ for cenario in $CENARIOS; do
     coletar_recursos "$pasta/recursos.csv" &
     coletor=$!
 
-    k6 run -q \
-      -e BASE_URL="http://localhost:$PORTA" -e VUS="$vus" -e DURATION="$DURACAO" \
-      -e PAUSA_S="$PAUSA_S" -e RECALCULOS="$RECALCULOS" \
-      --summary-export "$pasta/k6.json" load/viagem.js > "$pasta/k6.log" 2>&1 || true
+    BASE_URL="http://localhost:$PORTA" DURATION="$DURACAO" PAUSA_S="$PAUSA_S" RECALCULOS="$RECALCULOS" \
+      load/rodar.sh viagem "$vus" "$pasta" > /dev/null
 
     kill "$coletor"
     wait "$coletor" 2> /dev/null || true

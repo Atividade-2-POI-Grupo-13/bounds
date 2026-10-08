@@ -23,7 +23,7 @@ log = logging.getLogger("rotas")
 
 MAP_FILE = os.environ.get("MAP_FILE", "data/campina_grande.map.gz")
 MAX_CONCURRENT = int(os.environ.get("MAX_CONCURRENT", "0"))
-MAX_ALCANCE_MIN = float(os.environ.get("MAX_ALCANCE_MIN", "30"))
+MAX_ALCANCE_MIN = float(os.environ.get("MAX_ALCANCE_MIN", "60"))
 CAPACIDADE_VIA = float(os.environ.get("CAPACIDADE_VIA", "2"))
 ARVORE_VALIDADE_S = float(os.environ.get("ARVORE_VALIDADE_S", "60"))
 VIAGEM_EXPIRA_S = float(os.environ.get("VIAGEM_EXPIRA_S", "300"))
