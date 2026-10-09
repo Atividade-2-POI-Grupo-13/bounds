@@ -38,6 +38,7 @@ Sobre o GIL do Python: medimos 8 rotas em sequência (1,76 s), com `ThreadPoolEx
 - Desempenho, medido de fora da VM com o k6 no hospedeiro: latência média, p50, p95 e p99 (geral e por tipo de requisição), vazão em req/s e taxa de erro.
 - VM: `vmstat 1` dentro da VM (CPU, memória livre, buffers, cache, swap usado, swap in/out).
 - Aplicação: `/metrics` a cada segundo (RSS, pico de RSS, CPU do processo, viagens ativas, requisições em andamento).
+- VM vista de fora: monitor em processo separado (`deploy/monitor.py`), lido pelo hospedeiro a cada segundo. Mostra memória, swap e CPU da VM e o RSS da aplicação, e continua respondendo quando a aplicação está ocupada ou reiniciando.
 - Falhas por memória: reinícios do serviço (`systemctl show rotas -p NRestarts`) e mensagens do OOM killer (`journalctl -k`).
 
 ## 2. Configuração da VM e deploy
