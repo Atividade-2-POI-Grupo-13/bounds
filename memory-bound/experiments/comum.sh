@@ -11,6 +11,8 @@ PASTA_VM="${PASTA_VM:-memory-bound-rotas}"  # pasta do projeto dentro da VM (a p
 VBOXMANAGE="${VBOXMANAGE:-VBoxManage}"
 BASE_URL="${BASE_URL:-http://$HOST_VM:$PORTA_APP}"
 RESULTADOS="${RESULTADOS:-results/raw}"  # onde cenario.sh e run_level.sh gravam
+PORTA_MONITOR="${PORTA_MONITOR:-8081}"     # hospedeiro 8081 -> VM 8001 (deploy/monitor.py)
+MONITOR_URL="${MONITOR_URL:-http://$HOST_VM:$PORTA_MONITOR}"
 export BASE_URL
 
 # A VM é recriada a cada ida ao LCC, então a chave do host muda: não guardar.
@@ -60,11 +62,18 @@ reiniciar_servico() {
 }
 
 coletar_metrics_host() {
-  # Uma linha por segundo: "tempo json" do /metrics, lido de fora da VM.
+  # Uma linha por segundo: "tempo json", lido de fora da VM. Vem do monitor da VM
+  # (processo separado, responde mesmo com a aplicação ocupada ou reiniciando);
+  # se o monitor não responder, tenta o /metrics da aplicação.
   local arquivo="$1"
   : > "$arquivo"
   while true; do
-    echo "$(date +%s) $(curl -s -m 2 "$BASE_URL/metrics" || echo "{}")" >> "$arquivo"
+    local json
+    json=$(curl -s -m 2 "$MONITOR_URL" || true)
+    if [ -z "$json" ]; then
+      json=$(curl -s -m 2 "$BASE_URL/metrics" || echo "{}")
+    fi
+    echo "$(date +%s) $json" >> "$arquivo"
     sleep 1
   done
 }

@@ -82,8 +82,10 @@ def no_mais_proximo(texto: str) -> int:
     return no
 
 
+# /health e /metrics são async: rodam direto no laço de eventos e respondem mesmo
+# quando todas as threads do pool estão ocupadas calculando rotas.
 @app.get("/health")
-def health():
+async def health():
     return {"status": "ok", "nodes": graph.num_nodes, "edges": graph.num_edges}
 
 
@@ -174,7 +176,7 @@ def reiniciar():
 
 
 @app.get("/metrics")
-def metrics_endpoint():
+async def metrics_endpoint():
     dados = metrics.snapshot()
     dados["viagens_ativas"] = viagens.quantidade()
     return dados

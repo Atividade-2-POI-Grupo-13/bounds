@@ -81,14 +81,22 @@ sed -e "s#__PASTA__#$PASTA#g" \
     -e "s#__PYTHON__#$PYTHON#g" \
     -e "s#__PYTHONPATH__#$PYTHONPATH_SERVICO#g" \
     deploy/rotas.service | sudo tee /etc/systemd/system/rotas.service > /dev/null
+# Monitor da VM num processo separado (porta 8001), usado pelos experimentos sem ssh.
+sed -e "s#__PASTA__#$PASTA#g" -e "s#__USUARIO__#$USUARIO#g" \
+    deploy/rotas-monitor.service | sudo tee /etc/systemd/system/rotas-monitor.service > /dev/null
 sudo systemctl daemon-reload
-sudo systemctl enable -q rotas
-sudo systemctl restart rotas
+sudo systemctl enable -q rotas rotas-monitor
+sudo systemctl restart rotas rotas-monitor
 
 echo "== Esperando /health (o mapa leva alguns segundos para carregar)"
 for _ in $(seq 1 60); do
   if curl -sf localhost:8000/health; then
     echo
+    if curl -sf -m 2 localhost:8001 > /dev/null; then
+      echo "== monitor ok (porta 8001)"
+    else
+      echo "== AVISO: o monitor não respondeu na porta 8001. Veja: journalctl -u rotas-monitor -n 20"
+    fi
     echo "== Memória e swap da VM (registrar no relatório; não mudar entre cenários)"
     free -h
     swapon --show || true

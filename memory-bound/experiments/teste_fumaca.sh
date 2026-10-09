@@ -3,7 +3,7 @@
 # Confere as ferramentas e mede na VM real o que a calibração no Mac só estimou:
 #   1. se as ferramentas existem (VBoxManage, k6, curl, python3);
 #   2. quanta memória sobra na VM do C1 com a aplicação carregada;
-#   3. se o ssh para a VM funciona (se não, recomenda SEM_SSH=1);
+#   3. se o ssh para a VM funciona (se não, recomenda SEM_SSH=1) e se o monitor da VM responde;
 #   4. quanto custa iniciar uma viagem na CPU do LCC3;
 #   5. quanto de CPU 10 usuários usam com a configuração real.
 # No fim, recomenda a RAM do C1, a pausa entre recálculos e o comando do run_all.sh.
@@ -50,6 +50,13 @@ if [ "$SEM_SSH" != 1 ] && na_vm true 2> /dev/null; then
 else
   echo "   sem ssh: o teste segue com SEM_SSH=1"
   export SEM_SSH=1
+fi
+
+if curl -sf -m 3 "$MONITOR_URL" > /dev/null; then
+  echo "   monitor da VM ok ($MONITOR_URL)"
+else
+  echo "   AVISO: monitor da VM sem resposta em $MONITOR_URL (confira o serviço rotas-monitor e a"
+  echo "   regra NAT 8081 -> 8001); a coleta pelo hospedeiro vai usar o /metrics da aplicação"
 fi
 
 echo "== 4. Custo de iniciar uma viagem (VM com 2 GB, 1 usuário, viagens curtas)"

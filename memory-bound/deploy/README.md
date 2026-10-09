@@ -30,13 +30,16 @@ VBoxManage internalcommands sethduuid /tmp/ubuntu_serve_2204_poi.vdi
 
 ## 2. Redirecionar portas (NAT)
 
-Hospedeiro 8080 para a aplicação (8000 na VM) e hospedeiro 2222 para o ssh (22 na VM):
+Hospedeiro 8080 para a aplicação (8000 na VM), 2222 para o ssh (22 na VM) e 8081 para o monitor da VM (8001 na VM):
 
 ```
 VBoxManage modifyvm vm-rotas --natpf1 "app,tcp,,8080,,8000"
 VBoxManage modifyvm vm-rotas --natpf1 "ssh,tcp,,2222,,22"
+VBoxManage modifyvm vm-rotas --natpf1 "monitor,tcp,,8081,,8001"
 VBoxManage startvm vm-rotas --type headless
 ```
+
+A regra do monitor também é recriada pelo `experiments/cenario.sh` a cada troca de cenário.
 
 Login: `osboxes`, senha `osboxes.org`.
 
@@ -73,6 +76,7 @@ O script:
 - sem `python3-venv` e sem internet, descompacta as wheels em `.pacotes/` e usa essa pasta no `PYTHONPATH`;
 - tenta instalar o `openssh-server` se ele faltar e houver internet;
 - instala e liga o serviço `rotas` no systemd;
+- instala e liga o serviço `rotas-monitor` (`deploy/monitor.py`, porta 8001): um processo separado que mostra memória, swap e CPU da VM e o estado da aplicação, e responde mesmo com a aplicação ocupada ou reiniciando;
 - espera `/health` responder;
 - mostra a memória e o swap da VM.
 
@@ -91,6 +95,7 @@ No hospedeiro:
 
 ```
 curl localhost:8080/health
+curl localhost:8081
 ```
 
 Resposta esperada: `{"status":"ok","nodes":214373,"edges":565101}`.

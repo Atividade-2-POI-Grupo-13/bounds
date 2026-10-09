@@ -110,4 +110,8 @@ Roteiro para o dia, no hospedeiro Linux:
 5. Rodar o comando sugerido. O `run_all.sh` faz uma repetição completa de todos os cenários antes da próxima. Se for interrompido, rodar o mesmo comando de novo continua de onde parou.
 6. No Mac: `python analysis/analyze.py`.
 
-Sem ssh na VM (`SEM_SSH=1`): o serviço reinicia entre níveis por `POST /admin/reiniciar` (liberado só pela variável `PERMITIR_REINICIO=1` do serviço), a memória, o swap e a CPU da VM vêm do `/metrics` lido pelo hospedeiro, e os reinícios por falta de memória são contados pela mudança de `inicio_epoch`. Ficam faltando o `vmstat` e as mensagens do OOM killer. Enquanto o processo está reiniciando, não há amostra.
+Em todos os níveis, o hospedeiro lê a cada segundo o monitor da VM (`deploy/monitor.py`, porta 8081 no hospedeiro). Ele roda num processo separado da aplicação, então continua respondendo quando ela está com todas as threads ocupadas ou reiniciando. Para acompanhar ao vivo: `experiments/acompanhar.sh`.
+
+Sem ssh na VM (`SEM_SSH=1`): o serviço reinicia entre níveis por `POST /admin/reiniciar` (liberado só pela variável `PERMITIR_REINICIO=1` do serviço), a memória, o swap e a CPU vêm só do monitor, e os reinícios por falta de memória são contados pela mudança de `inicio_epoch`. Ficam faltando o `vmstat` e as mensagens do OOM killer.
+
+O roteiro completo do dia (prints, demonstração e como salvar o disco da VM) está em `docs/dia_lcc.md`.

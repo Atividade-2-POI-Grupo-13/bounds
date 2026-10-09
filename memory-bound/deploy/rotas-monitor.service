@@ -1,0 +1,15 @@
+# Monitor da VM (deploy/monitor.py), separado da aplicação. O install.sh troca os
+# __MARCADORES__ e copia para /etc/systemd/system/rotas-monitor.service.
+[Unit]
+Description=Monitor da VM para os experimentos (memoria, swap, CPU, processo da aplicacao)
+After=network.target
+
+[Service]
+User=__USUARIO__
+ExecStart=/usr/bin/python3 __PASTA__/deploy/monitor.py
+Environment=MONITOR_PORTA=8001
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

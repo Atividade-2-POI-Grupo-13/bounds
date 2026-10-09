@@ -41,9 +41,13 @@ fi
 echo "== $nome: aplicando $cpus CPU e $ram_mb MB"
 # Logo depois de desligar, a VM pode continuar travada por alguns segundos: tenta de novo.
 # O IO-APIC precisa estar ligado para a VM subir com mais de 1 CPU.
+# Também garante o redirecionamento do monitor da VM (hospedeiro 8081 -> VM 8001):
+# apaga a regra (se existir) e cria de novo.
 aplicado=0
 for _ in $(seq 1 10); do
-  if "$VBOXMANAGE" modifyvm "$VM" --ioapic on --cpus "$cpus" --memory "$ram_mb"; then
+  "$VBOXMANAGE" modifyvm "$VM" --natpf1 delete monitor 2> /dev/null || true
+  if "$VBOXMANAGE" modifyvm "$VM" --ioapic on --cpus "$cpus" --memory "$ram_mb" \
+       --natpf1 "monitor,tcp,,$PORTA_MONITOR,,8001"; then
     aplicado=1
     break
   fi
