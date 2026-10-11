@@ -21,7 +21,7 @@ Roteiro para a ida ao laboratório: o que levar, a ordem dos passos, os prints d
 | 2 | `export K6=~/bin/k6` (do pendrive ou `experiments/instalar_k6.sh`) | 2 min |
 | 3 | Com ssh: `ssh-copy-id -p 2222 osboxes@localhost` (senha `osboxes.org`) | 1 min |
 | 4 | `experiments/teste_fumaca.sh` e print das recomendações | 6 min |
-| 5 | Colar o comando que o teste de fumaça imprimir (`... experiments/run_all.sh`) | cerca de 2 h |
+| 5 | Colar o comando que o teste de fumaça imprimir (`... experiments/run_all.sh`) | 2h10 (2 repetições) a 3h15 (3) |
 | 6 | Durante o passo 5, num segundo terminal: `experiments/acompanhar.sh` e prints de um nível de C1 com swap ou reinício | |
 | 7 | Copiar `results/raw/` para o pendrive (ou `git push`) | 2 min |
 | 8 | Salvar o disco da VM (seção 5 deste documento) | 10 min |
