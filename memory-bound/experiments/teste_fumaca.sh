@@ -80,7 +80,7 @@ nivel_max = int(nivel_max)
 pausa = float(pausa)
 recalculos = int(recalculos)
 repeticoes = int(repeticoes)
-MEMORIA_POR_VIAGEM_MB = 20  # medido no Linux (docs/calibracao.md)
+MEMORIA_POR_VIAGEM_MB = 28  # medido no Docker, Linux (docs/perfil_local.md)
 CPU_ALVO = 60  # % de CPU no maior nível, para a CPU não virar o limite
 
 # Memória livre no C1, gravada por cenario.sh (linha com o JSON do /metrics).
@@ -106,7 +106,7 @@ else:
 with open(f"{pasta}/cpu/viagem/vus_1/rep_1/k6.json") as f:
     metricas = json.load(f)["metrics"]
 inicio_ms = metricas["http_req_duration{fase:medicao,name:inicio}"]["med"]
-print(f"Iniciar uma viagem: {inicio_ms:.0f} ms (no Mac: cerca de 280 ms)")
+print(f"Iniciar uma viagem: {inicio_ms:.0f} ms (no Mac: cerca de 250 ms)")
 
 # CPU média da VM com 10 usuários, depois do aquecimento (/metrics lido do hospedeiro).
 cpus = []

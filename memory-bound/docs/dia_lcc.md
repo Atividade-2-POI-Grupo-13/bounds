@@ -1,59 +1,63 @@
 # Dia no LCC3
 
-Roteiro para a ida ao laboratório: o que levar, a ordem dos passos, os prints do relatório, a demonstração ao professor e como salvar o disco da VM.
+Anotações para o dia do experimento e da demonstração.
 
 ## 1. Antes de ir
 
-- Ensaio no Mac com o UTM (`deploy/README.md`, seção 8). Anotar três coisas:
-  - se o ssh da VDI responde;
-  - quanto `free -m` mostra com a VM parada;
-  - se a aplicação sobe com 512 MB.
-- Pendrive com:
-  - o repositório inteiro (o mapa e as wheels já estão dentro);
-  - o k6 para Linux x86_64: rodar `experiments/instalar_k6.sh` numa máquina Linux e copiar `~/bin/k6`.
-- Conferir que `data/paraiba.map.gz` e `deploy/wheels/` estão no clone.
+- [ ] Ensaio no Mac com UTM (`deploy/README.md`, seção 8). Ver se o ssh da VDI responde, quanto `free -m` mostra e se a aplicação sobe com 512 MB.
+- [ ] Pendrive com o repositório. O mapa e as wheels já estão dentro.
+- [ ] `~/bin/k6` para Linux x86_64 no pendrive. Gerar com `experiments/instalar_k6.sh` numa máquina Linux.
 
-## 2. Ordem no dia
+## 2. Sequência
 
-| passo | comando ou ação | tempo |
-|---|---|---|
-| 1 | Criar a VM e instalar (`deploy/README.md`, seções 1 a 5), tirando os prints da seção 3 deste documento | 20 min |
-| 2 | `export K6=~/bin/k6` (do pendrive ou `experiments/instalar_k6.sh`) | 2 min |
-| 3 | Com ssh: `ssh-copy-id -p 2222 osboxes@localhost` (senha `osboxes.org`) | 1 min |
-| 4 | `experiments/teste_fumaca.sh` e print das recomendações | 6 min |
-| 5 | Colar o comando que o teste de fumaça imprimir (`... experiments/run_all.sh`) | 2h10 (2 repetições) a 3h15 (3) |
-| 6 | Durante o passo 5, num segundo terminal: `experiments/acompanhar.sh` e prints de um nível de C1 com swap ou reinício | |
-| 7 | Copiar `results/raw/` para o pendrive (ou `git push`) | 2 min |
-| 8 | Salvar o disco da VM (seção 5 deste documento) | 10 min |
+1. Criar a VM (`deploy/README.md`, seção 1). 10 min.
+2. Testar a rede com o nginx e o redirecionamento de portas (seção 2). 10 min.
+3. Copiar, instalar e verificar a aplicação (seções 3 a 5). 10 min.
+4. `export K6=~/bin/k6`.
+5. Se a VM tem ssh: `ssh-copy-id -p 2222 osboxes@localhost`.
+6. `experiments/teste_fumaca.sh`. 6 min.
+7. Colar o comando que o teste de fumaça imprimir (`... experiments/run_all.sh`). 2h08 com 2 repetições, 3h13 com 3.
+8. Em outro terminal, durante o passo 7: `experiments/acompanhar.sh`.
+9. Copiar `results/raw/` para o pendrive ou fazer `git push`.
+10. Salvar o disco da VM (seção 5 abaixo). 10 min.
 
-Se o `run_all.sh` parar no meio (queda, falta de tempo), rodar o mesmo comando de novo continua de onde parou. Ele completa uma repetição de todos os cenários antes de começar a próxima.
+Se o `run_all.sh` parar, rodar o mesmo comando retoma do nível interrompido. Cada repetição termina em todos os cenários antes de a próxima começar.
 
-## 3. Prints para o relatório
+## 3. Prints
 
-Seções do `docs/relatorio_rascunho.md`:
+Todos vão para `docs/relatorio_rascunho.md`, na seção indicada.
 
-| seção | print |
-|---|---|
-| 2.1 | Terminal com o `cp` da VDI para `/tmp` |
-| 2.1 | VirtualBox: criação da VM (nome, tipo Ubuntu 64-bit, pasta `/tmp`) |
-| 2.1 | VirtualBox: Sistema com 1 CPU e 1024 MB |
-| 2.1 | VirtualBox: Armazenamento com o disco existente |
-| 2.1 | VirtualBox: Rede NAT, redirecionamento de portas (app 8080, ssh 2222, monitor 8081) |
-| 2.1 | Console da VM com o login `osboxes` |
-| 2.2 | Cópia do projeto (`scp` ou `deploy/servir_projeto.sh`) |
-| 2.2 | Fim da saída do `./deploy/install.sh` (health, monitor, `free -h`, swap, ssh) |
-| 2.2 | `systemctl status rotas` dentro da VM |
-| 2.2 | `curl localhost:8080/health` no hospedeiro |
-| 3.2 | Saída do `experiments/teste_fumaca.sh` |
-| 3.2 | Início do `run_all.sh` com o tempo estimado |
-| 3.3 | `experiments/acompanhar.sh` durante um nível de C1, mostrando swap subindo ou "REINICIOU" |
+Seção 2.1:
 
-## 4. Demonstração ao professor (cerca de 5 minutos)
+- [ ] `cp` da VDI para `/tmp`
+- [ ] Criação da VM (nome, Ubuntu 64-bit, pasta `/tmp`)
+- [ ] 1 CPU e 1024 MB
+- [ ] Disco existente
+- [ ] Console com o login `osboxes`
+- [ ] `systemctl status nginx` e `curl localhost:80` na VM
+- [ ] `curl localhost:80` falhando no hospedeiro
+- [ ] Redirecionamento de portas com as 4 regras
+- [ ] `curl localhost:8088` no hospedeiro devolvendo a página do nginx
 
-Três terminais no hospedeiro, VM no cenário C2 (1 CPU, 1 GB).
+Seção 2.3:
 
-1. VirtualBox aberto na VM: mostrar CPU, memória e o redirecionamento de portas.
-2. Terminal 1, a aplicação respondendo de fora da VM:
+- [ ] Cópia do projeto (`scp` ou `deploy/servir_projeto.sh`)
+- [ ] Fim da saída do `./deploy/install.sh`
+- [ ] `systemctl status rotas` na VM
+- [ ] `curl localhost:8080/health` no hospedeiro
+
+Seções 3.2 e 3.3:
+
+- [ ] Saída do `teste_fumaca.sh`
+- [ ] Início do `run_all.sh` com o tempo estimado
+- [ ] `acompanhar.sh` num nível de C1 com swap subindo ou "REINICIOU"
+
+## 4. Demonstração (5 min)
+
+VM em C2 (1 CPU, 1 GB). Três terminais no hospedeiro.
+
+1. VirtualBox: mostrar CPU, memória e redirecionamento de portas.
+2. Terminal 1:
 
    ```
    curl localhost:8080/health
@@ -61,39 +65,37 @@ Três terminais no hospedeiro, VM no cenário C2 (1 CPU, 1 GB).
    curl "localhost:8080/viagens/1/rota?posicao=-7.2000,-35.5000"
    ```
 
-   No segundo comando, usar o número de `viagem` que o primeiro devolveu. Pontos a mostrar na resposta: a viagem de Campina Grande a João Pessoa tem 134 km, a árvore guardada usa cerca de 13 MB, e o recálculo responde com `arvore_nova: false`.
+   No terceiro comando, usar o número da viagem devolvido pelo segundo. A abertura devolve 134 km e `memoria_arvore_mb` perto de 13. O recálculo devolve `arvore_nova: false`.
 3. Terminal 2: `experiments/acompanhar.sh`.
-4. Terminal 3, carga leve e depois pesada:
+4. Terminal 3:
 
    ```
    BASE_URL=http://localhost:8080 DURATION=60s load/rodar.sh viagem 5 /tmp/demo5
    BASE_URL=http://localhost:8080 DURATION=90s load/rodar.sh viagem 40 /tmp/demo40
    ```
 
-   No terminal 2: com 5 usuários a memória sobe pouco. Com 40 ela chega perto de 1 GB, entra swap, e a aplicação pode aparecer como "REINICIOU". A CPU fica com folga.
-5. Mostrar `results/graficos/viagem_comparacao.png`: com a mesma carga, C3 (mais RAM) resolve e C4 (mais CPU) fica igual a C2.
+   No terminal 2 a memória da VM sobe com os usuários. Na prova local, C2 com 40 usuários entrou em swap com a CPU em 43%.
+5. Abrir `results/graficos/viagem_comparacao.png`.
 
-## 5. Salvar o disco da VM no Drive
+## 5. Salvar o disco da VM
 
-1. Voltar a VM para a configuração do roteiro e desligar:
+1. Desligar e voltar para 1 CPU e 1 GB:
 
    ```
    VBoxManage controlvm vm-rotas acpipowerbutton
    VBoxManage modifyvm vm-rotas --cpus 1 --memory 1024
    ```
 
-2. O disco é o próprio `/tmp/ubuntu_serve_2204_poi.vdi`, com a aplicação instalada. Enviar esse arquivo para o Drive pelo navegador (ele tem alguns GB; começar o envio cedo).
-3. Opcional, para guardar também a configuração da VM (CPU, memória, portas): `VBoxManage export vm-rotas -o /tmp/vm-rotas.ova` e enviar o `.ova`.
+2. Enviar `/tmp/ubuntu_serve_2204_poi.vdi` para o Drive pelo navegador. São alguns GB, então começar cedo.
+3. Opcional: `VBoxManage export vm-rotas -o /tmp/vm-rotas.ova` e enviar o `.ova`, que guarda também CPU, memória e portas.
 
-O `/tmp` pode ser apagado quando a máquina reinicia: só sair do laboratório depois que o envio terminar.
+O `/tmp` pode ser limpo quando a máquina reinicia. Só sair do laboratório com o envio terminado.
 
-## 6. Perguntas prováveis
+## 6. Se perguntarem
 
-| pergunta | resposta curta | onde está o dado |
-|---|---|---|
-| É memory-bound mesmo ou é limitação do Python? | A CPU tem folga no ponto em que a memória acaba; mais RAM resolve e mais CPU não muda nada. | gráficos de CPU e de comparação |
-| Guardar a árvore por viagem é artificial? | É a troca de memória por CPU que um app de navegação faz: recalcular pela árvore custa cerca de 2 ms; refazer a busca custa 280 ms. | `docs/calibracao.md` |
-| Por que não usar vários processos para fugir do GIL? | Cada processo carrega o mapa de novo (cerca de 290 MB) e o trânsito deixa de ser compartilhado. Medido: threads 1,80 s, processos 0,74 s para 8 rotas. | `docs/relatorio_rascunho.md`, seção 1.1 |
-| Por que o swap não degradou logo? | O swap guarda bem as árvores das viagens paradas; a queda forte vem quando ele acaba e o processo é morto. | gráficos de swap e de erros |
-| A carga foi gerada de fora da VM? | Sim, k6 no hospedeiro, pela porta 8080. | `experiments/run_level.sh` |
-| Como sabem que o processo morreu por falta de memória? | Reinícios do systemd e mensagens do OOM killer no log do kernel, contados em cada nível. | `results/resumo.csv`, colunas `reinicios` e `mensagens_oom` |
+- **Por que memory-bound?** Na prova local a CPU ficou abaixo de 55% em todos os níveis. C3 (mais RAM) zerou os erros com 60 usuários e C4 (mais CPU) ficou como C2. Dados em `docs/perfil_local.md`.
+- **Por que guardar a árvore por viagem?** Recalcular pela árvore custa 1,5 ms e uma busca nova custa cerca de 250 ms. A memória paga essa diferença (`docs/calibracao.md`, seção 4).
+- **Por que um processo só?** Cada processo carregaria o mapa (290 MB) e o trânsito não seria mais compartilhado (`docs/calibracao.md`, seção 3).
+- **Por que o swap não degradou logo?** Ele guarda as árvores das viagens paradas. A queda grande vem quando o swap acaba e o processo é morto.
+- **A carga veio de fora da VM?** Veio. O k6 roda no hospedeiro e entra pela porta 8080 (`experiments/run_level.sh`).
+- **Como sabem que o processo morreu por memória?** Pelos reinícios do systemd e pelas mensagens do OOM killer, contados por nível em `results/resumo.csv` (colunas `reinicios` e `mensagens_oom`).

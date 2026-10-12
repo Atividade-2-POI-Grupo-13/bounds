@@ -1,23 +1,26 @@
-# Calibração (etapa 2)
+# Calibração
 
-Medido no Mac (Apple Silicon, Python 3.10) com `tools/calibrate.py`. Na VM do LCC3 os tempos de CPU devem ser 2 a 3 vezes maiores; as memórias devem ficar parecidas.
+Medido no Mac (Apple Silicon, Python 3.10) com `tools/calibrate.py`. O custo de CPU na VM do LCC3 é medido pelo `experiments/teste_fumaca.sh` (início de viagem com 1 usuário).
 
-## 1. Mapas disponíveis
+## 1. Mapas
 
-| mapa | nós | arestas | arquivo | base (RSS após carregar) |
+Base: RSS do processo logo após carregar o mapa, na primeira versão do servidor (seção 2).
+
+| mapa | nós | arestas | arquivo | base |
 |---|---|---|---|---|
 | campina_grande | 12.808 | 34.045 | 0,3 MB | 60 MB |
 | campina_grande_full (sem simplificar) | 62.755 | 127.695 | 1,2 MB | 87 MB |
 | paraiba | 214.373 | 565.101 | 5,7 MB | 204 MB |
 | paraiba_full (sem simplificar) | 2.472.615 | 5.041.246 | 45 MB | 1.454 MB |
 
-`paraiba_full` não cabe na VM e ficou fora do Git.
+- `paraiba_full` não cabe na VM e fica fora do Git.
+- O experimento usa `paraiba`. Com o código atual (trânsito e grafo invertido), a base é 291 MB.
 
-## 2. Custo por requisição
+## 2. Primeira versão: rota avulsa sem trânsito
 
-"+RSS N sim." é o crescimento do RSS do processo com N requisições disparadas juntas, servidor recém-iniciado.
+"+RSS N" é o crescimento do RSS com N requisições disparadas juntas, servidor recém-iniciado.
 
-| mapa | endpoint | visitados | mem/req média | mem/req máx | CPU/req | +RSS 1 | +RSS 5 | +RSS 10 | +RSS 20 | +RSS 40 |
+| mapa | endpoint | nós visitados | mem/req média | mem/req máx | CPU/req | +RSS 1 | +RSS 5 | +RSS 10 | +RSS 20 | +RSS 40 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | campina_grande | rota | 6.250 | 1,0 MB | 2,0 MB | 4 ms | 1 | 2 | 2 | 4 | 5 |
 | campina_grande_full | rota | 26.242 | 4,2 MB | 8,7 MB | 18 ms | 8 | 15 | 24 | 26 | 32 |
@@ -26,58 +29,38 @@ Medido no Mac (Apple Silicon, Python 3.10) com `tools/calibrate.py`. Na VM do LC
 | paraiba | alcance 120 min | 78.006 | 12,0 MB | 17,8 MB | 68 ms | 29 | 72 | 76 | 91 | 158 |
 | paraiba_full | rota | 1.174.964 | 182 MB | 288 MB | 863 ms | 524 | 1.258 | 1.538 | 4.052 | 4.674 |
 
-Rotas longas em `paraiba` (origem e destino a mais de 200 km): 27 MB em média, 114 ms de CPU.
+- Rotas acima de 200 km em `paraiba`: 27 MB e 114 ms de CPU em média.
+- Em todos os mapas o Dijkstra gasta cerca de 0,2 MB por ms de CPU (cerca de 160 bytes por nó visitado).
 
-## 3. O que os números mostram
+## 3. Mecanismos testados
 
-- Memória e CPU por requisição crescem juntas. Em todos os mapas o Dijkstra gasta cerca de 0,2 MB por ms de CPU (cerca de 160 bytes por nó visitado).
-- A base fica perto de 1 KB por nó do mapa. Uma busca que percorre o mapa inteiro usa cerca de 1/6 da base. Com base até 250 MB, uma requisição de `/rota` fica em no máximo 35 MB.
-- Requisições só se acumulam em memória quando estão em andamento ao mesmo tempo. Com 1 núcleo, isso só acontece quando a CPU já está em 100%. Então a CPU vai aparecer saturada em todos os cenários sob carga. A prova de que a aplicação é memory-bound vem da comparação entre cenários: C2 x C3 (mais RAM) contra C2 x C4 (mais CPU).
-- Com 1 processo Python, a segunda CPU do C4 fica quase ociosa por causa do GIL.
+1. Rota avulsa sem trânsito (seção 2): 17 MB por requisição. Caiu porque a memória só acumula com requisições simultâneas, e com 1 núcleo isso só acontece com a CPU em 100%.
+2. Trânsito compartilhado com foto de pesos por requisição (commit `4483695`, API `/rota?veiculo=`, removida depois): 49 MB por requisição (tabela abaixo). Caiu pelo mesmo motivo. A foto de pesos ficou como custo de toda busca completa.
+3. Viagem com árvore de caminhos guardada (código atual, seção 4): a memória cresce com usuários dirigindo, mesmo sem requisição em andamento. Adotado.
+4. Vários processos para usar a segunda CPU: cada processo carrega o mapa (291 MB) e o trânsito deixa de ser compartilhado. Descartado. Medição avulsa, sem script no repositório, com 8 rotas: em sequência 1,76 s, 4 threads 1,80 s, 4 processos 0,74 s. Repetição em 11/10/2026 (só Dijkstra, foto de pesos fora do tempo): 0,76 s, 0,78 s e 0,30 s. Threads não paralelizam o Dijkstra por causa do GIL.
 
-## 4. Decisão: trânsito compartilhado
+Versão 2, mapa `paraiba`, base 227 MB:
 
-O código sem trânsito dava cerca de 12 MB por usuário em carga. Com esse valor, a VM de 1 GB só degradaria perto de 55 usuários, e a fila de CPU dominaria o tempo de resposta antes disso.
+| endpoint | mem/req média | mem/req máx | CPU/req | +RSS 1 | +RSS 5 | +RSS 10 | +RSS 20 | +RSS 40 |
+|---|---|---|---|---|---|---|---|---|
+| rota | 49,1 MB | 66,4 MB | 218 ms | 102 | 245 | 436 | 731 | 1.271 |
+| alcance 60 min | 35,5 MB | 40,5 MB | 151 ms | 42 | 220 | 319 | 386 | 681 |
 
-A aplicação ganhou trânsito compartilhado (`app/traffic.py`):
+O trânsito (capacidade 2) aumenta a busca em cerca de 5%: 103.728 nós visitados sem veículos, 109.689 com 40, tempo de rota 1,07 vez o tempo livre.
 
-- cada `/rota` com `veiculo=ID` registra o veículo nas arestas da rota; um novo pedido do mesmo veículo é um recálculo e troca a rota;
-- `DELETE /veiculos/ID` tira o veículo do trânsito na chegada;
-- o tempo de cada aresta segue a fórmula BPR: `tempo_livre × (1 + 0,15 × (fluxo / CAPACIDADE_VIA)^4)`;
-- cada busca monta a própria foto dos pesos (um float por aresta), para o trânsito não mudar no meio do Dijkstra. Essa foto é a maior estrutura da requisição.
+## 4. Versão atual: memória por viagem
 
-Modelo de memória:
+`python tools/calibrate.py data/paraiba.map.gz --viagens`, em 11/10/2026. Viagens abertas e nunca encerradas. Base 291 MB.
 
-```
-memória total ≈ mapa + fluxo do trânsito + (requisições simultâneas × (foto de pesos + busca))
-```
+| viagens abertas | RSS MB | +RSS MB | +RSS por viagem MB | árvore média MB | nós por árvore | CPU de início ms |
+|---|---|---|---|---|---|---|
+| 1 | 326 | 34 | 34,2 | 13,6 | 128.013 | 263 |
+| 5 | 414 | 123 | 24,5 | 14,7 | 133.715 | 243 |
+| 10 | 525 | 233 | 23,3 | 16,6 | 141.312 | 248 |
+| 20 | 708 | 417 | 20,8 | 16,5 | 139.867 | 238 |
+| 40 | 702 | 410 | 10,3 | 16,8 | 144.782 | 242 |
+| 80 | 1.021 | 730 | 9,1 | 16,4 | 142.793 | 240 |
 
-## 5. Números com trânsito (mapa paraiba)
-
-| endpoint | base MB | mem/req média | mem/req máx | CPU/req | +RSS 1 | +RSS 5 | +RSS 10 | +RSS 20 | +RSS 40 |
-|---|---|---|---|---|---|---|---|---|---|
-| rota | 227 | 49,1 MB | 66,4 MB | 218 ms | 102 | 245 | 436 | 731 | 1.271 |
-| alcance 60 min | 227 | 35,5 MB | 40,5 MB | 151 ms | 42 | 220 | 319 | 386 | 681 |
-
-Efeito da cascata (15 rotas de teste, capacidade 2):
-
-| veículos ativos | nós visitados por busca | tempo com trânsito / tempo livre |
-|---|---|---|
-| 0 | 103.728 | 1,00 |
-| 20 | 109.341 | 1,07 |
-| 40 | 109.689 | 1,07 |
-| 80 | 109.038 | 1,06 |
-
-O trânsito aumenta a busca em cerca de 5%. O peso maior da cascata na carga vem dos recálculos: cada usuário faz várias requisições por viagem.
-
-## 6. Estimativa do joelho na VM
-
-Supondo cerca de 120 MB usados pelo Ubuntu Server ocioso e cerca de 30 MB por requisição simultânea (coluna +RSS).
-
-| VM | sobra para requisições | joelho estimado |
-|---|---|---|
-| 512 MB | cerca de 165 MB | cerca de 5 usuários |
-| 1 GB | cerca de 680 MB | cerca de 20 usuários |
-| 2 GB | cerca de 1.700 MB | cerca de 55 usuários |
-
-Recomendação: mapa `paraiba`, endpoint principal `/rota` com veículos e recálculos, `/alcance 60` como segundo peso. Níveis de demanda: 1, 2, 5, 10, 20, 40 e 60. Os tempos de CPU no LCC3 devem ser 2 a 3 vezes maiores que os do Mac.
+- Recálculo pela árvore guardada: 1,5 ms de CPU (0 de 80 refizeram a árvore).
+- "árvore média" é a estimativa da própria aplicação (`memoria_arvore_mb`).
+- Com 40 e 80 viagens o RSS por viagem cai pela metade. Hipótese: compressão de memória do macOS, que tira páginas do RSS. Por isso a referência de memória por usuário vem do Docker (Linux): em C3, 341 MB com 1 usuário e 1.981 MB com 60, cerca de 28 MB por usuário (`docs/perfil_local.md`).

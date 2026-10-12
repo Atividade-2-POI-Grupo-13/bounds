@@ -5,7 +5,7 @@
 # em cada um, vários níveis de usuários com o k6. Cada nível começa com o
 # container recém-criado (memória limpa).
 #
-# Os limites de memória ficam uns 120 MB abaixo da RAM da VM equivalente,
+# Os limites de memória ficam de 112 a 148 MB abaixo da RAM da VM equivalente,
 # porque na VM o Ubuntu também usa memória. O swap extra é igual em todos.
 #
 # Uso: experiments/perfil_local.sh            (todos os cenários e níveis)

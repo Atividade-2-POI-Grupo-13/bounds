@@ -1,35 +1,35 @@
-# Prova local do perfil memory-bound (etapa 3)
+# Prova local do perfil memory-bound
 
-Docker no Mac no lugar da VM. Cada nível começa com o container recém-criado.
+Docker no Mac no lugar da VM, antes do LCC3. Resultado prévio; os resultados do relatório vêm da VM.
 
-- Comando: `experiments/perfil_local.sh`, depois `python analysis/perfil_local.py`.
-- Carga: `load/viagem.js`. Cada usuário inicia uma viagem, recalcula 6 vezes com 3 s de direção entre os recálculos e avisa a chegada (viagem de 21 s).
-- Cada nível dura 60 s: 21 s de aquecimento e 39 s de medição.
-- Limites do container: 400 MB (C1), 900 MB (C2 e C4) e 1.900 MB (C3), cerca de 120 MB abaixo da VM equivalente. Swap extra de 1 GB em todos.
-- Uma repetição por nível.
+- Comandos: `experiments/perfil_local.sh` e `python analysis/perfil_local.py`. Dados em `results/local/`.
+- Carga: `load/viagem.js` com `PAUSA_S=3`. Cada usuário abre uma viagem, recalcula 6 vezes e encerra (21 s por viagem).
+- Nível: container recém-criado, 60 s de k6 (21 s de aquecimento, 39 s de medição), uma repetição.
+- Limites de memória: 400 MB (C1), 900 MB (C2 e C4), 1.900 MB (C3). Ficam 112 a 148 MB abaixo da VM equivalente, a parte que o Ubuntu ocuparia.
+- Swap extra de 1 GB em todos. CPU em % de 1 núcleo.
 
 ![Resultados por cenário](img/perfil_local.png)
 
-## 1. Resultado
+## 1. Resumo
 
-| cenário | 1º nível com swap | 1º nível com erros | p95 do início com 60 usuários | erros com 60 usuários | CPU média no 1º nível com swap |
+| cenário | 1º nível com swap | 1º nível com erros | p95 do início com 60 usuários | erros com 60 usuários | CPU no 1º nível com swap |
 |---|---|---|---|---|---|
-| C1 (1 CPU, 512 MB) | 5 usuários | 20 usuários | 30 s (timeout) | 100% | 8% |
+| C1 (1 CPU, 512 MB) | 5 usuários | 20 usuários | 30 s (timeout do k6) | 100% | 8% |
 | C2 (1 CPU, 1 GB) | 40 usuários | 60 usuários | 7,5 s | 25% | 43% |
 | C3 (1 CPU, 2 GB) | 60 usuários | nenhum | 2,2 s | 0% | 53% |
 | C4 (2 CPU, 1 GB) | 40 usuários | 60 usuários | 4,1 s | 28% | 39% |
 
-- A memória cresce com os usuários: em C3, de 341 MB (1 usuário) a 1.981 MB (60 usuários).
-- Em C1 a memória acaba com 5 usuários. Com 10 usuários o p95 do início sobe de 355 ms para 1,2 s, com a CPU em 15%. Com 40 e 60, o processo é morto por falta de memória.
-- Dobrar a RAM (C2 para C3) elimina os erros com 60 usuários (de 25% para 0%) e reduz o p95 de 7,5 s para 2,2 s.
-- Dobrar a CPU (C2 para C4) mantém o swap e os erros iguais (28% contra 25%).
-- A CPU média fica abaixo de 55% em todos os níveis. A memória chega ao limite antes da CPU.
+- Em C3 a memória vai de 341 MB (1 usuário) a 1.981 MB (60 usuários).
+- C1 entra em swap com 5 usuários. Com 10, o p95 do início sobe de 355 ms para 1,2 s com CPU em 15%. Com 40 e 60, o processo é morto por falta de memória.
+- C2 para C3 (dobro de RAM): erros com 60 usuários de 25% para 0%, p95 do início de 7,5 s para 2,2 s.
+- C2 para C4 (dobro de CPU): swap e erros parecidos (28% contra 25%).
+- A CPU média fica abaixo de 55% em todos os níveis.
 
 ## 2. Pontos de atenção
 
-- Com 40 usuários, C3 tem p95 de 2,2 s sem swap. Esse aumento vem de rajadas de início de viagem disputando a CPU (média de 41%). Os erros e as mortes por falta de memória aparecem só nos cenários com pouca RAM.
-- O swap absorve bem as árvores das viagens paradas: C2 usou 939 MB de swap com 40 usuários e ficou com p95 parecido com o de C3. A queda forte vem quando o swap também acaba e o processo é morto. Na VM, o tamanho do swap muda esse ponto, então ele precisa ser registrado (etapa 5).
-- A CPU do Mac é 2 a 3 vezes mais rápida que a do LCC3. Na VM, a CPU média deve ficar mais alta nos mesmos níveis.
+- C3 com 40 usuários tem p95 de 2,2 s sem swap, com CPU média de 41%. A causa provável são inícios de viagem simultâneos disputando a CPU.
+- C2 com 40 usuários usou 939 MB de swap e teve p95 parecido com o de C3 (2,1 s contra 2,2 s). A queda forte vem quando o swap acaba e o processo é morto. O tamanho do swap da VM muda esse ponto e precisa ser registrado.
+- Os tempos de CPU na VM devem ser maiores que no Mac. O teste de fumaça mede o custo do início de viagem no LCC3.
 
 ## 3. Tabela completa
 

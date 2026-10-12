@@ -1,18 +1,16 @@
 # Deploy na VM
 
-Passo a passo do roteiro do professor, para a máquina do LCC3 (Linux com VirtualBox). Os comandos `VBoxManage` e `scp` rodam no hospedeiro. O `install.sh` roda dentro da VM.
+Roteiro do professor aplicado à máquina do LCC3. `VBoxManage`, `scp` e os testes marcados "no hospedeiro" rodam na máquina do LCC3. O resto roda dentro da VM.
 
 ## 1. Criar a VM
-
-Copiar a imagem para `/tmp` (o `/tmp` pode ser apagado quando a máquina reinicia):
 
 ```
 cp /local/uasc/images/ubuntu_serve_2204_poi.vdi /tmp/
 ```
 
-Pela interface do VirtualBox: nome `vm-rotas`, pasta `/tmp`, tipo Linux, Ubuntu (64-bit), 1 CPU, 1024 MB, usar o disco existente `/tmp/ubuntu_serve_2204_poi.vdi`.
+VirtualBox > Novo: nome `vm-rotas`, pasta `/tmp`, tipo Linux, Ubuntu (64-bit), 1 CPU, 1024 MB, disco existente `/tmp/ubuntu_serve_2204_poi.vdi`.
 
-Os comandos equivalentes:
+Equivalente em linha de comando:
 
 ```
 VBoxManage createvm --name vm-rotas --ostype Ubuntu_64 --basefolder /tmp --register
@@ -22,44 +20,62 @@ VBoxManage storageattach vm-rotas --storagectl SATA --port 0 --device 0 --type h
   --medium /tmp/ubuntu_serve_2204_poi.vdi
 ```
 
-Se o VirtualBox reclamar que o UUID do disco já existe (imagem usada antes nessa máquina), gerar um UUID novo:
+Erro de UUID repetido (imagem já usada nessa máquina): `VBoxManage internalcommands sethduuid /tmp/ubuntu_serve_2204_poi.vdi`.
+
+Ligar a VM e entrar com `osboxes` / `osboxes.org`.
+
+## 2. Testar a rede com nginx (passos 5 a 8 do roteiro)
+
+Prova de que o redirecionamento de portas funciona antes do deploy da aplicação.
+
+Na VM:
 
 ```
-VBoxManage internalcommands sethduuid /tmp/ubuntu_serve_2204_poi.vdi
+sudo apt install nginx
+sudo systemctl status nginx
+curl localhost:80
 ```
 
-## 2. Redirecionar portas (NAT)
+Sem internet na VM, `sudo python3 -m http.server 80` serve uma página na mesma porta.
 
-Hospedeiro 8080 para a aplicação (8000 na VM), 2222 para o ssh (22 na VM) e 8081 para o monitor da VM (8001 na VM):
+No hospedeiro, `curl localhost:80` falha: ainda não há redirecionamento.
+
+Desligar a VM (`sudo poweroff`) e criar as regras em Configurações > Rede > Avançado > Redirecionamento de portas:
+
+| nome | hospedeiro | VM | uso |
+|---|---|---|---|
+| nginx | 8088 | 80 | teste de rede |
+| app | 8080 | 8000 | aplicação |
+| monitor | 8081 | 8001 | monitor da VM |
+| ssh | 2222 | 22 | cópia do projeto e coleta |
+
+O roteiro usa a porta 80 no hospedeiro. No Linux, um usuário sem root não abre porta abaixo de 1024, por isso o hospedeiro usa 8088.
+
+Equivalente em linha de comando:
 
 ```
+VBoxManage modifyvm vm-rotas --natpf1 "nginx,tcp,,8088,,80"
 VBoxManage modifyvm vm-rotas --natpf1 "app,tcp,,8080,,8000"
-VBoxManage modifyvm vm-rotas --natpf1 "ssh,tcp,,2222,,22"
 VBoxManage modifyvm vm-rotas --natpf1 "monitor,tcp,,8081,,8001"
+VBoxManage modifyvm vm-rotas --natpf1 "ssh,tcp,,2222,,22"
 VBoxManage startvm vm-rotas --type headless
 ```
 
-A regra do monitor também é recriada pelo `experiments/cenario.sh` a cada troca de cenário.
+No hospedeiro, com a VM ligada: `curl localhost:8088` devolve a página do nginx.
 
-Login: `osboxes`, senha `osboxes.org`.
+Depois do teste, desligar o nginx para ele não ocupar memória nos cenários: `sudo systemctl disable --now nginx`.
 
-## 3. Copiar o projeto para a VM
+`experiments/cenario.sh` recria a regra `monitor` a cada troca de cenário.
 
-No hospedeiro, a partir de um clone do repositório (um clone novo não tem `.venv`):
+## 3. Copiar o projeto
+
+De um clone do repositório no hospedeiro:
 
 ```
 scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/
 ```
 
-Se a VM tiver internet, também dá para clonar direto dentro dela com `git clone`.
-
-Se a VM não tiver ssh (o `scp` falha), o hospedeiro serve o projeto por HTTP e a VM baixa pela rede NAT, onde o hospedeiro é `10.0.2.2`:
-
-```
-deploy/servir_projeto.sh
-```
-
-O script mostra o comando para digitar no console da VM (baixa, descompacta e roda o `install.sh`). Depois, os experimentos rodam com `SEM_SSH=1` (ver o `README.md` do projeto, seção 7).
+Sem ssh na VM: `deploy/servir_projeto.sh` no hospedeiro serve o projeto na porta 8099 e imprime o comando para o console da VM (baixa de `10.0.2.2`, descompacta e roda o `install.sh`).
 
 ## 4. Instalar
 
@@ -69,72 +85,42 @@ cd memory-bound-rotas
 ./deploy/install.sh
 ```
 
-O script:
+O `install.sh`:
 
-- tenta instalar `python3-venv` e `sysstat` com apt;
-- cria a `.venv` e instala as dependências a partir de `deploy/wheels/`, sem precisar de internet;
-- sem `python3-venv` e sem internet, descompacta as wheels em `.pacotes/` e usa essa pasta no `PYTHONPATH`;
-- tenta instalar o `openssh-server` se ele faltar e houver internet;
-- instala e liga o serviço `rotas` no systemd;
-- instala e liga o serviço `rotas-monitor` (`deploy/monitor.py`, porta 8001): um processo separado que mostra memória, swap e CPU da VM e o estado da aplicação, e responde mesmo com a aplicação ocupada ou reiniciando;
-- espera `/health` responder;
-- mostra a memória e o swap da VM.
-
-Testado numa Ubuntu 22.04 x86_64 limpa (container com systemd), com internet e sem internet.
+- tenta instalar com apt o que faltar entre `python3-venv`, `sysstat` e `openssh-server`;
+- cria `.venv` e instala as dependências de `deploy/wheels/`, sem internet;
+- sem `python3-venv`, descompacta as wheels em `.pacotes/` e usa no `PYTHONPATH`;
+- instala e liga os serviços systemd `rotas` (porta 8000, `Restart=always`) e `rotas-monitor` (porta 8001);
+- espera `/health`, confere o monitor, mostra `free -h` e `swapon --show` e diz se a VM tem ssh.
 
 ## 5. Verificar
 
-Dentro da VM:
+Na VM: `systemctl status rotas` e `curl localhost:8000/health`.
 
-```
-systemctl status rotas
-curl localhost:8000/health
-```
+No hospedeiro: `curl localhost:8080/health` e `curl localhost:8081`.
 
-No hospedeiro:
+Resposta do `/health`: `{"status":"ok","nodes":214373,"edges":565101}`.
 
-```
-curl localhost:8080/health
-curl localhost:8081
-```
+## 6. Comandos para o relatório
 
-Resposta esperada: `{"status":"ok","nodes":214373,"edges":565101}`.
-
-## 6. Registrar para o relatório
-
-- Memória e swap da VM em cada cenário: `free -h` e `swapon --show`. O swap fica igual em todos os cenários.
-- Reinícios do serviço (processo morto por falta de memória): `systemctl show rotas -p NRestarts`.
-- Mensagens do OOM killer: `journalctl -k | grep -i -E "oom|killed process"`.
+- Memória e swap: `free -h` e `swapon --show`.
+- Reinícios do serviço: `systemctl show rotas -p NRestarts`.
+- OOM killer: `journalctl -k | grep -i -E "oom|killed process"`.
 - Log da aplicação: `journalctl -u rotas -f`.
 
 ## 7. Configuração do serviço
 
-As variáveis ficam em `deploy/rotas.service`. Depois de mudar, rodar `./deploy/install.sh` de novo.
-
-| variável | valor | o que faz |
-|---|---|---|
-| `MAP_FILE` | `data/paraiba.map.gz` | mapa carregado |
-| `PORT` | `8000` | porta da aplicação |
-| `MAX_CONCURRENT` | `0` | limite de cálculos ao mesmo tempo (0 = sem limite) |
-| `MAX_ALCANCE_MIN` | `60` | minutos máximos do `/alcance` |
-| `CAPACIDADE_VIA` | `2` | veículos por aresta antes de o trânsito pesar |
-| `ARVORE_VALIDADE_S` | `60` | idade máxima da árvore de uma viagem antes de refazer |
-| `VIAGEM_EXPIRA_S` | `300` | viagem sem uso por esse tempo é encerrada |
-| `PERMITIR_REINICIO` | `1` | libera `POST /admin/reiniciar`, usado entre níveis quando a VM não tem ssh |
+`deploy/rotas.service` usa os padrões do `README.md`, seção 3, com duas mudanças: `MAP_FILE=data/paraiba.map.gz` e `PERMITIR_REINICIO=1`. Depois de editar, rodar `./deploy/install.sh` de novo.
 
 ## 8. Ensaio no Mac com UTM
 
-A VDI é x86_64, então no Mac com Apple Silicon ela roda emulada (lenta). Serve para ensaiar estes passos. Os números de desempenho vêm só do LCC3.
+A VDI é x86_64 e roda emulada no Apple Silicon. Serve só para ensaiar os passos.
 
-1. Converter o disco: `qemu-img convert -f vdi -O qcow2 ubuntu_serve_2204_poi.vdi ubuntu.qcow2`.
-2. No UTM: nova VM em modo "Emular", arquitetura x86_64, 1 CPU, 1024 MB, usando `ubuntu.qcow2`.
-3. Rede em modo "Emulated VLAN", com redirecionamento 8080 para 8000 e 2222 para 22.
+1. `qemu-img convert -f vdi -O qcow2 ubuntu_serve_2204_poi.vdi ubuntu.qcow2`
+2. UTM: modo Emular, x86_64, 1 CPU, 1024 MB, disco `ubuntu.qcow2`.
+3. Rede Emulated VLAN com 8080 para 8000 e 2222 para 22.
 4. Seguir as seções 3 a 5.
 
-## 9. Sem internet na VM
+## 9. Atualizar as wheels
 
-As wheels de `deploy/wheels/` já estão no repositório. Para atualizar (numa máquina com internet):
-
-```
-PIP="uvx --python 3.10 pip" deploy/baixar_wheels.sh
-```
+Numa máquina com internet: `PIP="uvx --python 3.10 pip" deploy/baixar_wheels.sh`.
