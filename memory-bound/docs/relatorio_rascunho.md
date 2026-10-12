@@ -54,10 +54,22 @@ Passo a passo em `deploy/README.md`, seções 1 e 2.
 1. Cópia de `ubuntu_serve_2204_poi.vdi` de `/local/uasc/images` para `/tmp`. [PRINT]
 2. Criação da VM `vm-rotas`: Linux, Ubuntu (64-bit), pasta `/tmp`, 1 CPU, 1024 MB, disco existente. [PRINT] [PRINT] [PRINT]
 3. Login com `osboxes` / `osboxes.org`. [PRINT]
-4. nginx na VM: `sudo apt install nginx`, `sudo systemctl status nginx`, `curl localhost:80`. [PRINT]
-5. `curl localhost:80` no hospedeiro falha: sem redirecionamento, o hospedeiro não alcança a VM. [PRINT]
-6. VM desligada, Rede > Avançado > Redirecionamento de portas: 8088 para 80 (nginx), 8080 para 8000 (aplicação), 8081 para 8001 (monitor), 2222 para 22 (ssh). [PRINT]
-7. `curl localhost:8088` no hospedeiro devolve a página do nginx. [PRINT]
+4. nginx na VM: `sudo apt install nginx`, `sudo systemctl status nginx`, `curl localhost:80`.
+
+   ![nginx na VM](img/prints/2-1_nginx_na_vm.png)
+
+5. `curl localhost:80` no hospedeiro falha: sem redirecionamento, o hospedeiro não alcança a VM.
+
+   ![curl na porta 80 do hospedeiro falha](img/prints/2-1_curl80_hospedeiro_falha.png)
+
+6. VM desligada, Rede > Avançado > Redirecionamento de portas: 8088 para 80 (nginx), 8080 para 8000 (aplicação), 8081 para 8001 (monitor), 2222 para 22 (ssh). Na máquina de casa a regra da aplicação usa a porta 18080 do hospedeiro, porque a 8080 já era de outro serviço.
+
+   ![Regras de redirecionamento de portas](img/prints/2-1_redirecionamento_portas.png)
+
+7. `curl localhost:8088` no hospedeiro devolve a página do nginx.
+
+   ![curl na porta 8088 devolve o nginx da VM](img/prints/2-1_curl8088_nginx.png)
+
 8. nginx desligado (`sudo systemctl disable --now nginx`) para não ocupar memória nos cenários.
 
 O roteiro testa a porta 80 no hospedeiro. Um usuário sem root no Linux não abre porta abaixo de 1024, por isso o hospedeiro usa 8088.
@@ -70,11 +82,16 @@ O roteiro testa a porta 80 no hospedeiro. Um usuário sem root no Linux não abr
 ### 2.3 Requisitos e deploy
 
 - Requisitos: Ubuntu 22.04, Python 3.10, FastAPI 0.143.0, uvicorn 0.54.0, psutil 7.2.2. Mapa e wheels no repositório; a instalação funciona sem internet.
-- Cópia: `scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/`. [PRINT]
-- Instalação: `./deploy/install.sh`. [PRINT da saída]
-- Verificação: `systemctl status rotas` na VM e `curl localhost:8080/health` no hospedeiro. [PRINT] [PRINT]
+- Cópia, dentro da VM: `git clone https://github.com/WendellTMO/memory-bound memory-bound-rotas`. [PRINT]
+- Instalação: `./deploy/install.sh`. O fim da saída mostra `/health` com 214.373 nós, o monitor ativo e a memória e o swap da VM.
+- Verificação: `systemctl status rotas` na VM e `curl localhost:8080/health` no hospedeiro (18080 na máquina de casa).
+
+![Fim da instalação e estado do serviço rotas, com os limites de memória](img/prints/2-3_install_status_limites.png)
+
+![/health e monitor vistos do hospedeiro](img/prints/2-3_health_monitor_hospedeiro.png)
+
 - Memória e swap da VM: [`free -h` e `swapon --show`]. A imagem tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB), igual em todos os cenários.
-- Limites do serviço `rotas`: `MemoryMax=80%` e `MemorySwapMax=1G`, para reproduzir o 1 GB de swap da prova local. Sem eles o processo não seria morto por falta de memória. Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax`. [PRINT]
+- Limites do serviço `rotas`: `MemoryMax=80%` e `MemorySwapMax=1G`, para reproduzir o 1 GB de swap da prova local. Sem eles o processo não seria morto por falta de memória. Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax` (saída no primeiro print acima).
 
 ## 3. Teste de stress
 
