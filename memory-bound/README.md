@@ -108,8 +108,8 @@ Passos (detalhe e prints em `docs/roteiro_lcc.md`):
 1. Criar a VM, testar a rede com nginx e instalar a aplicação (`git clone` dentro da VM): `deploy/README.md`.
 2. k6 sem root: `experiments/instalar_k6.sh` e `export K6=~/bin/k6`.
 3. Com ssh na VM: `ssh-copy-id -p 2222 osboxes@localhost` (senha `osboxes.org`).
-4. `experiments/teste_fumaca.sh` (cerca de 6 min). Imprime o comando do passo 5.
-5. Rodar o comando impresso. Ele troca CPU e RAM com `VBoxManage` e roda os níveis. Estimativa do próprio script: 3h13 com 3 repetições, 2h08 com 2. Rodar de novo o mesmo comando retoma de onde parou.
+4. `experiments/teste_fumaca.sh` (cerca de 6 min). Imprime as recomendações e salva o comando do passo 5 em `results/fumaca/comando.sh`.
+5. `results/fumaca/comando.sh`. Ele troca CPU e RAM com `VBoxManage` e roda os níveis. Estimativa do próprio script: 3h13 com 3 repetições, 2h08 com 2. Rodar o script de novo retoma de onde parou.
 6. Levar `results/raw/` para casa (pendrive ou `git push`).
 7. `python analysis/analyze.py`: gera `results/resumo.csv`, `results/graficos/*.png` e `results/observacoes.md`.
 

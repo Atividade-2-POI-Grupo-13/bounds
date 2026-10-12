@@ -16,7 +16,7 @@ Passos do experimento e da demonstração no laboratório.
 4. `export K6=~/bin/k6`.
 5. Se a VM tem ssh: `ssh-copy-id -p 2222 osboxes@localhost`.
 6. `experiments/teste_fumaca.sh`. 6 min.
-7. Colar o comando que o teste de fumaça imprimir (`... experiments/run_all.sh`). 2h08 com 2 repetições, 3h13 com 3.
+7. `results/fumaca/comando.sh`, que o teste de fumaça gerou com os valores recomendados. 2h08 com 2 repetições, 3h13 com 3.
 8. Em outro terminal, durante o passo 7: `experiments/acompanhar.sh`.
 9. Copiar `results/raw/` para o pendrive ou fazer `git push`.
 10. Salvar o disco da VM (seção 5 abaixo). 10 min.

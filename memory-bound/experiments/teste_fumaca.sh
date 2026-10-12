@@ -72,6 +72,7 @@ python3 - "$RESULTADOS" "$RAM_C1" "$NIVEL_MAX" "$PAUSA_S" "$RECALCULOS" "$REPETI
   << 'PYTHON' | tee "$RESULTADOS/recomendacoes.txt"
 import json
 import math
+import os
 import sys
 
 pasta, ram_c1, nivel_max, pausa, recalculos, repeticoes, tem_ssh = sys.argv[1:]
@@ -141,7 +142,14 @@ if total > 2.5 * 3600 and repeticoes > 2:
     total = 4 * repeticoes * 90 + 4 * 7 * repeticoes * por_nivel
     print(f"   com 2 repetições: {total // 3600}h{(total % 3600) // 60:02d}min (sugerido abaixo)")
 sem_ssh = "" if tem_ssh == "1" else "SEM_SSH=1 "
-print("\nComando sugerido:")
-print(f'  {sem_ssh}CENARIOS="C1:1:{ram_sugerida} C2:1:1024 C3:1:2048 C4:2:1024" '
-      f"PAUSA_S={pausa_sugerida:.0f} AQUECIMENTO_S={aquecimento} REPETICOES={repeticoes} experiments/run_all.sh")
+comando = (f'{sem_ssh}CENARIOS="C1:1:{ram_sugerida} C2:1:1024 C3:1:2048 C4:2:1024" '
+           f"PAUSA_S={pausa_sugerida:.0f} AQUECIMENTO_S={aquecimento} REPETICOES={repeticoes} experiments/run_all.sh")
+# O comando fica num script para não precisar digitar. As variáveis exportadas no terminal
+# (K6, PORTA_APP, PASTA_VM) valem também para ele.
+with open(f"{pasta}/comando.sh", "w") as f:
+    f.write(f'#!/usr/bin/env bash\ncd "$(dirname "$0")/../.."\n{comando}\n')
+os.chmod(f"{pasta}/comando.sh", 0o755)
+print("\nComando sugerido (salvo em results/fumaca/comando.sh):")
+print(f"  {comando}")
+print("\nPara rodar tudo: results/fumaca/comando.sh")
 PYTHON
