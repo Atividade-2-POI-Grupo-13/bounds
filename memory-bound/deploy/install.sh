@@ -33,7 +33,8 @@ fi
 if [ -n "$pacotes" ]; then
   echo "== Tentando instalar com apt:$pacotes"
   # shellcheck disable=SC2086
-  if sudo apt-get update -qq && sudo apt-get install -y -qq $pacotes; then
+  # NEEDRESTART_MODE=a evita a tela "Daemons using outdated libraries", que trava o apt no Ubuntu 22.04.
+  if sudo apt-get update -qq && sudo env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get install -y -qq $pacotes; then
     echo "apt ok"
   else
     echo "apt falhou (sem internet?), seguindo sem os pacotes"

@@ -22,6 +22,11 @@ Environment=ARVORE_VALIDADE_S=60
 Environment=VIAGEM_EXPIRA_S=300
 # Permite reiniciar pela API (POST /admin/reiniciar) quando não há ssh na VM.
 Environment=PERMITIR_REINICIO=1
+# A VM do professor tem 12 GiB de swap, e com isso o processo nunca seria morto por
+# falta de memória. Estes limites (só do serviço) reproduzem a prova local: 1 GB de swap
+# e RAM menos uma folga para o sistema. Com 85% a VM chegou a travar em thrashing no ensaio emulado; com 80% o processo foi morto e reiniciado.
+MemoryMax=80%
+MemorySwapMax=1G
 Restart=always
 RestartSec=2
 

@@ -69,13 +69,19 @@ Depois do teste, desligar o nginx para ele não ocupar memória nos cenários: `
 
 ## 3. Copiar o projeto
 
-De um clone do repositório no hospedeiro:
+A imagem do professor não tem ssh, então o projeto entra pelo console da VM, que tem internet pela rede NAT. Dentro da VM (a pasta precisa se chamar `memory-bound-rotas`, os scripts do hospedeiro a procuram com esse nome):
 
 ```
-scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/
+git clone https://github.com/WendellTMO/memory-bound memory-bound-rotas
+cd memory-bound-rotas
+./deploy/install.sh
 ```
 
-Sem ssh na VM: `deploy/servir_projeto.sh` no hospedeiro serve o projeto na porta 8099 e imprime o comando para o console da VM (baixa de `10.0.2.2`, descompacta e roda o `install.sh`).
+Se a VM não tiver `git`, instale com `sudo apt install -y git` (senha `osboxes.org`).
+
+Sem internet na VM: `deploy/servir_projeto.sh` no hospedeiro serve o projeto na porta 8099 e imprime o comando para o console da VM (baixa de `10.0.2.2`, descompacta e roda o `install.sh`).
+
+Com ssh na VM, de um clone no hospedeiro: `scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/`.
 
 ## 4. Instalar
 
@@ -110,7 +116,11 @@ Resposta do `/health`: `{"status":"ok","nodes":214373,"edges":565101}`.
 
 ## 7. Configuração do serviço
 
-`deploy/rotas.service` usa os padrões do `README.md`, seção 3, com duas mudanças: `MAP_FILE=data/paraiba.map.gz` e `PERMITIR_REINICIO=1`. Depois de editar, rodar `./deploy/install.sh` de novo.
+`deploy/rotas.service` usa os padrões do `README.md`, seção 3, com as mudanças `MAP_FILE=data/paraiba.map.gz` e `PERMITIR_REINICIO=1`. Depois de editar, rodar `./deploy/install.sh` de novo.
+
+Limites de memória do serviço, `MemoryMax=80%` (da RAM da VM) e `MemorySwapMax=1G`. A imagem do professor tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB). Com esse swap o processo nunca seria morto por falta de memória, e sem o `MemoryMax` a VM entrou em thrashing e travou no ensaio. Os limites valem só para o serviço `rotas` e reproduzem a prova local do Docker (1 GB de swap). O swap da VM não é alterado.
+
+Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax`.
 
 ## 8. Ensaio no Mac com UTM
 

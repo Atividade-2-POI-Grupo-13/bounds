@@ -101,9 +101,11 @@ Cenários (padrão de `experiments/run_all.sh`):
 
 Carga (`load/viagem.js`): cada usuário virtual abre uma viagem, recalcula 6 vezes com 5 s entre recálculos e encerra (35 s por viagem). Níveis de 1, 2, 5, 10, 20, 40 e 60 usuários. Cada nível: serviço reiniciado, 35 s de aquecimento, 60 s de medição. 3 repetições.
 
+O serviço `rotas` roda com `MemoryMax=80%` e `MemorySwapMax=1G` (`deploy/rotas.service`). A imagem do professor tem 12 GiB de swap, e sem esses limites o processo nunca seria morto por falta de memória. O swap da VM não é alterado.
+
 Passos (detalhe e prints em `docs/roteiro_lcc.md`):
 
-1. Criar a VM, testar a rede com nginx e instalar a aplicação: `deploy/README.md`.
+1. Criar a VM, testar a rede com nginx e instalar a aplicação (`git clone` dentro da VM): `deploy/README.md`.
 2. k6 sem root: `experiments/instalar_k6.sh` e `export K6=~/bin/k6`.
 3. Com ssh na VM: `ssh-copy-id -p 2222 osboxes@localhost` (senha `osboxes.org`).
 4. `experiments/teste_fumaca.sh` (cerca de 6 min). Imprime o comando do passo 5.

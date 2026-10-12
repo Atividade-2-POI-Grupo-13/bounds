@@ -6,11 +6,16 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 PORTA="${PORTA:-8099}"
 pasta_tmp="$(mktemp -d)"
-tar --exclude .venv --exclude .pacotes --exclude cache --exclude results --exclude .git \
-  --exclude __pycache__ -czf "$pasta_tmp/projeto.tgz" -C .. "$(basename "$PWD")"
-echo "Digite no console da VM:"
+# --no-xattrs: sem isso o tar do macOS enche o console da VM de avisos.
+# *_full*: mapas grandes que a VM não usa.
+tar --no-xattrs --exclude '*_full*' --exclude .venv --exclude .pacotes --exclude cache \
+  --exclude results --exclude .git --exclude __pycache__ \
+  -czf "$pasta_tmp/projeto.tgz" -C .. "$(basename "$PWD")"
+# Comando curto para digitar no console da VM, onde não há colar nem o layout do teclado é garantido.
+echo "curl -s http://10.0.2.2:$PORTA/projeto.tgz | tar -xz && cd $(basename "$PWD") && ./deploy/install.sh < /dev/null" > "$pasta_tmp/i"
+echo "Digite no console da VM (a senha do sudo é osboxes.org):"
 echo
-echo "  curl -s http://10.0.2.2:$PORTA/projeto.tgz | tar -xz && cd $(basename "$PWD") && ./deploy/install.sh"
+echo "  curl -s 10.0.2.2:$PORTA/i | sh"
 echo
 cd "$pasta_tmp"
 python3 -m http.server "$PORTA"

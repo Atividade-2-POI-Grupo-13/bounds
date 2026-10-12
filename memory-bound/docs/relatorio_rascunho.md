@@ -73,7 +73,8 @@ O roteiro testa a porta 80 no hospedeiro. Um usuário sem root no Linux não abr
 - Cópia: `scp -P 2222 -r memory-bound-rotas osboxes@localhost:~/`. [PRINT]
 - Instalação: `./deploy/install.sh`. [PRINT da saída]
 - Verificação: `systemctl status rotas` na VM e `curl localhost:8080/health` no hospedeiro. [PRINT] [PRINT]
-- Memória e swap da VM: [`free -h` e `swapon --show`]. O swap é o mesmo em todos os cenários.
+- Memória e swap da VM: [`free -h` e `swapon --show`]. A imagem tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB), igual em todos os cenários.
+- Limites do serviço `rotas`: `MemoryMax=80%` e `MemorySwapMax=1G`, para reproduzir o 1 GB de swap da prova local. Sem eles o processo não seria morto por falta de memória. Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax`. [PRINT]
 
 ## 3. Teste de stress
 
@@ -144,7 +145,8 @@ Resultados na VM:
 ### 3.5 Limitações
 
 - O k6 roda no mesmo hospedeiro da VM e disputa CPU com ela. A disputa é igual em todos os cenários.
-- O tamanho do swap da VM muda o nível em que o processo morre.
+- O nível em que o processo morre depende dos limites do serviço (`MemoryMax=80%` e `MemorySwapMax=1G`). Com o swap inteiro da imagem (12 GiB) ele só degradaria por lentidão do swap.
+- Os limites do serviço foram escolhidos para aproximar a prova local do Docker. A imagem do professor traz 12 GiB de swap e nenhum limite de memória.
 - Com 40 usuários ou mais, inícios de viagem simultâneos disputam a CPU e o p95 sobe mesmo sem swap (C3 na prova local).
 - Um processo Python usa um núcleo por vez para o Dijkstra. A segunda CPU de C4 atende só o kernel, o swap e o resto da VM.
 - A medição de threads contra processos foi avulsa e não tem script no repositório.
