@@ -1,6 +1,6 @@
-# Dia no LCC3
+# Roteiro no LCC3
 
-Anotações para o dia do experimento e da demonstração.
+Passos do experimento e da demonstração no laboratório.
 
 ## 1. Antes de ir
 

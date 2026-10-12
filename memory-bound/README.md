@@ -101,7 +101,7 @@ Cenários (padrão de `experiments/run_all.sh`):
 
 Carga (`load/viagem.js`): cada usuário virtual abre uma viagem, recalcula 6 vezes com 5 s entre recálculos e encerra (35 s por viagem). Níveis de 1, 2, 5, 10, 20, 40 e 60 usuários. Cada nível: serviço reiniciado, 35 s de aquecimento, 60 s de medição. 3 repetições.
 
-Passos (detalhe e prints em `docs/dia_lcc.md`):
+Passos (detalhe e prints em `docs/roteiro_lcc.md`):
 
 1. Criar a VM, testar a rede com nginx e instalar a aplicação: `deploy/README.md`.
 2. k6 sem root: `experiments/instalar_k6.sh` e `export K6=~/bin/k6`.
