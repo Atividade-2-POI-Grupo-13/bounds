@@ -22,7 +22,8 @@ SSH_BASE=(-p "$PORTA_SSH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev
 
 na_vm() {
   # Roda um comando na VM. Com tempo limite, porque a VM pode travar em swap pesado.
-  timeout 60 ssh "${SSH_BASE[@]}" "$USUARIO_VM@$HOST_VM" "$@"
+  # -n: sem ele o ssh lê o terminal, o tmux o suspende (estado T) e o timeout não consegue matá-lo.
+  timeout 60 ssh -n "${SSH_BASE[@]}" "$USUARIO_VM@$HOST_VM" "$@"
 }
 
 sudo_na_vm() {
