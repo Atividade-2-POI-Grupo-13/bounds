@@ -26,7 +26,7 @@ Se o `run_all.sh` parar, rodar o mesmo comando retoma do nível interrompido. Ca
 
 ## 3. Prints
 
-Todos vão para `docs/relatorio_rascunho.md`, na seção indicada.
+Todos vão para o relatório, na seção indicada.
 
 Seção 2.1:
 
@@ -89,7 +89,7 @@ O `/tmp` pode ser limpo quando a máquina reinicia. Só saia do laboratório com
 
 ## 6. Se perguntarem
 
-- **Por que memory-bound?** Em todos os cenários da prova local a CPU média ficou abaixo de 55%. No experimento na VM, mais RAM (C3) adiou o swap de 20 para 60 usuários, e mais CPU (C4) não ajudou. Dados em `docs/perfil_local.md`.
+- **Por que memory-bound?** Em todos os cenários da prova local a CPU média ficou abaixo de 55%. No experimento na VM, mais RAM (C3) adiou o swap de 20 para 60 usuários, e mais CPU (C4) não ajudou. Dados em `results/local/`.
 - **Por que guardar a árvore por viagem?** Recalcular pela árvore custa 1,5 ms. Uma busca nova custa cerca de 250 ms. A memória paga essa diferença (`docs/calibracao.md`, seção 4).
 - **Por que um processo só?** Cada processo carregaria o mapa de novo (290 MB) e o trânsito deixaria de ser compartilhado (`docs/calibracao.md`, seção 3).
 - **O processo chegou a ser morto por falta de memória?** Nas 56 execuções do experimento completo, não. O swap segurou o processo, que ficou lento, e os erros foram timeouts de 30 s do k6. A contagem de reinícios e de mensagens do OOM killer fica em `results/resumo.csv` (colunas `reinicios` e `mensagens_oom`).

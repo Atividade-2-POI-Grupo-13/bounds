@@ -10,7 +10,7 @@ Quando um motorista abre uma viagem, o servidor calcula a árvore de caminhos at
 memória ≈ 290 MB (mapa) + 20 a 30 MB × viagens abertas + 35 a 50 MB × buscas em andamento
 ```
 
-As medições de memória e CPU estão em `docs/calibracao.md`. A prova feita antes do laboratório, com Docker, está em `docs/perfil_local.md`.
+As medições de memória e CPU estão em `docs/calibracao.md`. Os dados da prova feita antes do laboratório, com Docker, estão em `results/local/`.
 
 ## 1. Rodar
 

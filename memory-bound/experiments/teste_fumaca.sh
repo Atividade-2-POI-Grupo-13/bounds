@@ -81,7 +81,7 @@ nivel_max = int(nivel_max)
 pausa = float(pausa)
 recalculos = int(recalculos)
 repeticoes = int(repeticoes)
-MEMORIA_POR_VIAGEM_MB = 28  # medido no Docker, Linux (docs/perfil_local.md)
+MEMORIA_POR_VIAGEM_MB = 28  # medido no Docker, Linux (results/local/)
 CPU_ALVO = 60  # % de CPU no maior nível, para a CPU não virar o limite
 
 # Memória livre no C1, gravada por cenario.sh (linha com o JSON do /metrics).

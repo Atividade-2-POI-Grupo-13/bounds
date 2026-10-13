@@ -63,4 +63,4 @@ O trânsito (capacidade 2) aumenta a busca em cerca de 5%: 103.728 nós visitado
 
 - Recálculo pela árvore guardada: 1,5 ms de CPU (0 de 80 refizeram a árvore).
 - "árvore média" é a estimativa da própria aplicação (`memoria_arvore_mb`).
-- Com 40 e 80 viagens o RSS por viagem cai pela metade. Hipótese: compressão de memória do macOS, que tira páginas do RSS. Por isso a referência de memória por usuário vem do Docker (Linux): em C3, 341 MB com 1 usuário e 1.981 MB com 60, cerca de 28 MB por usuário (`docs/perfil_local.md`).
+- Com 40 e 80 viagens o RSS por viagem cai pela metade. Hipótese: compressão de memória do macOS, que tira páginas do RSS. Por isso a referência de memória por usuário vem do Docker (Linux): em C3, 341 MB com 1 usuário e 1.981 MB com 60, cerca de 28 MB por usuário (`results/local/`).
