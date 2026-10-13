@@ -1,6 +1,6 @@
 # Prova local do perfil memory-bound
 
-Docker no Mac no lugar da VM, antes do LCC3. Resultado prévio; os resultados do relatório vêm da VM.
+Prova feita com Docker no Mac, antes de a VM existir. Serviu para escolher cenários e níveis. Os resultados do relatório vêm da VM (`README.md`, seção 5.4).
 
 - Comandos: `experiments/perfil_local.sh` e `python analysis/perfil_local.py`. Dados em `results/local/`.
 - Carga: `load/viagem.js` com `PAUSA_S=3`. Cada usuário abre uma viagem, recalcula 6 vezes e encerra (21 s por viagem).

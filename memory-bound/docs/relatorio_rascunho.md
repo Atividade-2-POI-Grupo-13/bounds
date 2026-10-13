@@ -2,7 +2,7 @@
 
 Grupo: [integrantes e matrículas]
 
-Colchetes marcam o que só existe depois do LCC3. Os gráficos de `results/graficos/` saem de `python analysis/analyze.py` com os dados da VM.
+Os gráficos de `results/graficos/` saem de `python analysis/analyze.py`. Colchetes marcam o que ainda falta preencher.
 
 ## 1. Aplicações desenvolvidas
 
@@ -90,7 +90,7 @@ O roteiro testa a porta 80 no hospedeiro. Um usuário sem root no Linux não abr
 
 ![/health e monitor vistos do hospedeiro](img/prints/2-3_health_monitor_hospedeiro.png)
 
-- Memória e swap da VM: [`free -h` e `swapon --show`]. A imagem tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB), igual em todos os cenários.
+- Memória e swap da VM: `free -h` e `swapon --show`. A imagem tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB), igual em todos os cenários.
 - Limites do serviço `rotas`: `MemoryMax=80%` e `MemorySwapMax=1G`, para reproduzir o 1 GB de swap da prova local. Sem eles o processo não seria morto por falta de memória. Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax` (saída no primeiro print acima).
 
 ## 3. Teste de stress
@@ -99,7 +99,7 @@ O roteiro testa a porta 80 no hospedeiro. Um usuário sem root no Linux não abr
 
 | cenário | CPU | RAM | papel |
 |---|---|---|---|
-| C1 | 1 | [512] MB | pouca memória |
+| C1 | 1 | 768 MB | pouca memória |
 | C2 | 1 | 1 GB | configuração do roteiro, referência |
 | C3 | 1 | 2 GB | dobro de RAM |
 | C4 | 2 | 1 GB | dobro de CPU |
@@ -109,11 +109,11 @@ C2 contra C3 isola o efeito da memória. C2 contra C4 isola o efeito da CPU.
 ### 3.2 Como os testes foram feitos
 
 - Carga gerada no hospedeiro, fora da VM, com k6 (`load/viagem.js`) pela porta 8080.
-- Cada usuário virtual abre uma viagem, recalcula [6] vezes com [5] s entre recálculos e encerra. Origem e destino vêm de 300 pares fixos.
+- Cada usuário virtual abre uma viagem, recalcula 6 vezes com 7 s entre recálculos e encerra. Origem e destino vêm de 300 pares fixos.
 - Níveis: 1, 2, 5, 10, 20, 40 e 60 usuários simultâneos.
-- Cada nível: serviço reiniciado, [35] s de aquecimento fora da medição, 60 s de medição, [3] repetições.
+- Cada nível: serviço reiniciado, 49 s de aquecimento fora da medição, 60 s de medição, 2 repetições. São 56 execuções.
 - Troca de cenário e níveis automatizados por `experiments/run_all.sh` com `VBoxManage`. [PRINT do teste de fumaça] [PRINT do início]
-- Hospedeiro: [modelo da CPU, núcleos, RAM, de `results/raw/execucao.txt`].
+- Hospedeiro: computador de casa com Core i3-2130 (2 núcleos, 4 threads), 7,6 GB de RAM, Ubuntu 24.04 e VirtualBox 7.2.20. Os containers do Nextcloud ficaram ligados durante o experimento.
 
 ### 3.3 Resultados
 
@@ -121,14 +121,14 @@ Prova prévia no Docker (Mac, limites equivalentes aos cenários, uma repetiçã
 
 ![Prova local no Docker](img/perfil_local.png)
 
-Resultados na VM:
+Resultados na VM (média de 2 repetições, `results/resumo.csv`):
 
 | cenário | 1º nível com swap | 1º nível com erros | p95 do início com 60 usuários | req/s com 60 usuários | erros com 60 usuários | CPU média com 60 usuários |
 |---|---|---|---|---|---|---|
-| C1 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C2 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C3 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| C4 | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| C1 | 10 | 20 | 30 s (limite do k6) | 1,6 | 100% | 100% |
+| C2 | 20 | 40 | 30 s (limite do k6) | 1,6 | 100% | 100% |
+| C3 | 60 | 60 | 30 s (limite do k6) | 6,8 | 11% | 85% |
+| C4 | 20 | 20 | 30 s (limite do k6) | 1,6 | 100% | 68% |
 
 ![p95 do início de viagem](../results/graficos/viagem_p95_inicio.png)
 
@@ -144,26 +144,24 @@ Resultados na VM:
 
 ![Comparação C2, C3 e C4](../results/graficos/viagem_comparacao.png)
 
-[PRINT do `experiments/acompanhar.sh` num nível de C1 com swap ou reinício]
-
-[Pontos de `results/observacoes.md`.]
+[PRINT do `experiments/acompanhar.sh` num nível de C1 com swap]
 
 ### 3.4 Interpretação e conclusões
 
-[Conferir com os números da VM. A prova local mostrou:]
-
-- A memória cresce com os usuários: em C3, de 341 MB com 1 usuário para 1.981 MB com 60.
-- Mais demanda degrada o desempenho quando a memória acaba. C1 entra em swap com 5 usuários e, com 10, o p95 do início sobe de 355 ms para 1,2 s com CPU em 15%.
-- Com o swap esgotado, o processo é morto e as viagens abertas se perdem: 25% de erros em C2 com 60 usuários.
-- Dobrar a RAM (C3) zerou os erros com 60 usuários e baixou o p95 do início de 7,5 s para 2,2 s.
-- Dobrar a CPU (C4) manteve swap e erros no nível de C2 (28% contra 25%).
-- A CPU média ficou abaixo de 55% em todos os níveis. O recurso que limita a aplicação é a memória.
+- A memória cresce com os usuários. Em C3 o RSS vai de 346 MB com 1 usuário para 1,6 GB com 60.
+- Mais demanda degrada o desempenho quando a memória acaba. C1 passa a usar swap com 10 usuários e C2 com 20. Nos dois casos o p95 do início de viagem salta de poucos segundos para o limite do k6.
+- Dobrar a RAM (C2 para C3) adiou o swap de 20 para 60 usuários. Com 40 usuários o C3 não teve erros nem swap, com 7,8 req/s.
+- Dobrar a CPU (C4) piorou o resultado em relação a C2: 15,6% de erros já com 20 usuários. A explicação provável é a disputa por CPU no hospedeiro, que tem 2 núcleos físicos e rodava também o k6 e o Nextcloud. Essa explicação não foi testada.
+- Nenhuma execução teve reinício do serviço ou mensagem do OOM killer. Com o swap de 1 GB liberado ao serviço, o processo ficou lento e os erros foram timeouts de 30 s do k6.
+- A CPU chega a 100% em C1 e C2 com 60 usuários, mas isso acontece com o sistema em swap. Nos níveis sem swap a CPU média é baixa (13% em C3 com 10 usuários). O recurso que limita a aplicação é a memória.
+- Antes do laboratório, a prova no Docker (`docs/perfil_local.md`) já apontava o mesmo: a CPU média ficou abaixo de 55% em todos os níveis.
 
 ### 3.5 Limitações
 
 - O k6 roda no mesmo hospedeiro da VM e disputa CPU com ela. A disputa é igual em todos os cenários.
-- O nível em que o processo morre depende dos limites do serviço (`MemoryMax=80%` e `MemorySwapMax=1G`). Com o swap inteiro da imagem (12 GiB) ele só degradaria por lentidão do swap.
-- Os limites do serviço foram escolhidos para aproximar a prova local do Docker. A imagem do professor traz 12 GiB de swap e nenhum limite de memória.
-- Com 40 usuários ou mais, inícios de viagem simultâneos disputam a CPU e o p95 sobe mesmo sem swap (C3 na prova local).
+- O hospedeiro é um computador de casa, com Nextcloud ligado durante a medição. Medições no LCC3 podem diferir.
+- O p95 de 30 s é o limite de timeout do k6. O tempo real das requisições que falharam é maior.
+- Cada nível teve 2 repetições.
+- Os limites do serviço (`MemoryMax=80%` e `MemorySwapMax=1G`) aproximam a prova local do Docker. A imagem do professor traz 12 GiB de swap e nenhum limite de memória.
 - Um processo Python usa um núcleo por vez para o Dijkstra. A segunda CPU de C4 atende só o kernel, o swap e o resto da VM.
 - A medição de threads contra processos foi avulsa e não tem script no repositório.

@@ -118,7 +118,9 @@ Resposta do `/health`: `{"status":"ok","nodes":214373,"edges":565101}`.
 
 `deploy/rotas.service` usa os padrões do `README.md`, seção 3, com as mudanças `MAP_FILE=data/paraiba.map.gz` e `PERMITIR_REINICIO=1`. Depois de editar, rodar `./deploy/install.sh` de novo.
 
-Limites de memória do serviço, `MemoryMax=80%` (da RAM da VM) e `MemorySwapMax=1G`. A imagem do professor tem 12 GiB de swap (arquivo de 3,8 GB e partição de 9 GB). Com esse swap o processo nunca seria morto por falta de memória, e sem o `MemoryMax` a VM entrou em thrashing e travou no ensaio. Os limites valem só para o serviço `rotas` e reproduzem a prova local do Docker (1 GB de swap). O swap da VM não é alterado.
+O serviço roda com `MemoryMax=80%` (da RAM da VM) e `MemorySwapMax=1G`. A imagem do professor tem 12 GiB de swap, um arquivo de 3,8 GB e uma partição de 9 GB. Com tanto swap o processo não seria morto por falta de memória, e sem o `MemoryMax` a VM entrou em thrashing e travou no ensaio.
+
+Os limites valem só para o serviço `rotas` e reproduzem o 1 GB de swap da prova local com Docker. O swap da VM continua o mesmo.
 
 Conferir: `systemctl show rotas -p MemoryMax -p MemorySwapMax`.
 
