@@ -471,7 +471,8 @@ def main() -> None:
                 tipos.append(chave)
     for chave in tipos:
         tipo = chave[len("p95_"):-len("_ms")]
-        graficos.append((chave, f"p95 de {tipo} (ms, escala log)", f"p95_{tipo}", True))
+        nome_com_acento = {"inicio": "início", "recalculo": "recálculo"}.get(tipo, tipo)
+        graficos.append((chave, f"p95 de {nome_com_acento} (ms, escala log)", f"p95_{tipo}", True))
 
     for endpoint in endpoints:
         for campo, titulo, nome, log in graficos:
