@@ -41,8 +41,6 @@ Cada rodada vira uma pasta em `resultados/<data>_<hora>/`, com:
 
 A cada rodada também são refeitos `resultados/comparacao.png` (os cenários lado a lado) e `resultados/resumo.csv` (os números de cada rodada). Para refazê-los sem rodar de novo: `python3 plotar.py`.
 
-Os resultados do teste feito num Mac com Docker estão em `resultados/local/`.
-
 ## Rodar sem Docker
 
 Precisa de Java 21 e Maven. Suba os apps em três terminais, o buffer primeiro:
