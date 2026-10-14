@@ -1,0 +1,4 @@
+# Servidor (vai para a VM). Só dependências leves, compatíveis com Python 3.10.
+fastapi==0.143.0
+uvicorn==0.54.0
+psutil==7.2.2

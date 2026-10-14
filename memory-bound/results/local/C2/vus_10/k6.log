@@ -1,0 +1,52 @@
+
+
+  █ THRESHOLDS 
+
+    http_req_duration{fase:medicao,name:inicio}
+    ✓ 'max>=0' max=578.32ms
+
+    http_req_duration{fase:medicao,name:recalculo}
+    ✓ 'max>=0' max=70.53ms
+
+    http_req_duration{fase:medicao}
+    ✓ 'max>=0' max=578.32ms
+
+    http_req_failed{fase:medicao}
+    ✓ 'rate>=0' rate=0.00%
+
+    http_reqs{fase:medicao}
+    ✓ 'count>=0' count=185
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 203     2.656224/s
+    checks_succeeded...: 100.00% 203 out of 203
+    checks_failed......: 0.00%   0 out of 203
+
+    ✓ inicio 200
+    ✓ recalculo 200
+
+    HTTP
+    http_req_duration...................: avg=46.82ms  med=8.91ms   p(95)=298.47ms p(99)=432.9ms  max=578.32ms
+      { expected_response:true }........: avg=46.82ms  med=8.91ms   p(95)=298.47ms p(99)=432.9ms  max=578.32ms
+      { fase:medicao,name:inicio }......: avg=305.77ms med=290.76ms p(95)=504.5ms  p(99)=563.56ms max=578.32ms
+      { fase:medicao,name:recalculo }...: avg=9.32ms   med=7.18ms   p(95)=22.4ms   p(99)=38.78ms  max=70.53ms 
+      { fase:medicao }..................: avg=40.87ms  med=8.18ms   p(95)=288.92ms p(99)=445.52ms max=578.32ms
+    http_req_failed.....................: 0.00%  0 out of 232
+      { fase:medicao }..................: 0.00%  0 out of 185
+    http_reqs...........................: 232    3.035684/s
+      { fase:medicao }..................: 185    2.420696/s
+
+    EXECUTION
+    iteration_duration..................: avg=24.16s   med=21.45s   p(95)=32.85s   p(99)=39.78s   max=42.05s  
+    iterations..........................: 29     0.379461/s
+    vus.................................: 1      min=1        max=10
+    vus_max.............................: 10     min=10       max=10
+
+    NETWORK
+    data_received.......................: 1.7 MB 23 kB/s
+    data_sent...........................: 27 kB  350 B/s
+
+
+
