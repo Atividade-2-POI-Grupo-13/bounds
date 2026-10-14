@@ -3,3 +3,6 @@ data/
 .idea/
 *.iml
 .vscode/
+.mvn
+.DS_Store
+.DS_store
