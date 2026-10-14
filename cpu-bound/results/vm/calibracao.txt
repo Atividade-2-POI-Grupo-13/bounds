@@ -1,0 +1,7 @@
+data: 2026-10-14T18:59:00-03:00
+hospedeiro: bruno-Vostro-3520, 12 CPUs
+vm: vm-poi, 1 vCPU
+iteracoes testadas: 100000
+tempos (ms, ordenados): 52.4 52.5 52.6 52.7 53.0 53.0 53.0 53.1 53.2 53.2 53.4 53.5 53.8 54.0 54.0 54.0 54.1 54.3 54.3 54.5 54.7 55.2 56.6 56.8 57.1 59.4 59.9 61.2 61.8 69.1
+mediana: 54.0 ms
+iteracoes para 50 ms: 92000

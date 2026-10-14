@@ -1,0 +1,11 @@
+cenario: V3
+vm: vm-poi  memory=2048 cpus=1 
+nucleos: 1  memoria: 2048m  iteracoes: 92000
+cpus do hospedeiro: 12
+memoria total da vm (kB): 2011040
+diferenca de relogio hospedeiro - vm (s): 1.789
+taxas: 10 30 pedidos/s
+repeticoes: 1  aquecimento: 10s  medicao: 30s
+health: {"status":"ok","processadores":1,"threads":1}
+inicio: 2026-10-14T19:05:11-03:00
+fim: 2026-10-14T19:07:12-03:00

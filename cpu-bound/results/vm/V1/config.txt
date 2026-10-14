@@ -1,0 +1,11 @@
+cenario: V1
+vm: vm-poi  memory=1024 cpus=1 
+nucleos: 1  memoria: 1024m  iteracoes: 92000
+cpus do hospedeiro: 12
+memoria total da vm (kB): 980384
+diferenca de relogio hospedeiro - vm (s): 1.334
+taxas: 10 30 pedidos/s
+repeticoes: 1  aquecimento: 10s  medicao: 30s
+health: {"status":"ok","processadores":1,"threads":1}
+inicio: 2026-10-14T19:00:00-03:00
+fim: 2026-10-14T19:02:03-03:00
