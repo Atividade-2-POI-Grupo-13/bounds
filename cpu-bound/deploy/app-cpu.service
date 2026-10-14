@@ -1,0 +1,21 @@
+# Unidade systemd da app-cpu. Copiar para /etc/systemd/system/app-cpu.service
+# (passo a passo em deploy/README.md).
+#
+# Nao e habilitada no boot: a aplicacao sobe com sudo ~/cpu-bound/up.sh,
+# para so uma aplicacao do grupo rodar por vez. Se cair, volta sozinha.
+[Unit]
+Description=app-cpu: servico de hash de senhas (CPU-bound)
+After=network.target
+
+[Service]
+# Memoria da JVM fixa, para que mudar a RAM da VM nao altere a aplicacao.
+# THREADS nao e definido: a aplicacao usa uma thread por vCPU.
+ExecStart=/usr/bin/java -Xms128m -Xmx128m -jar /home/osboxes/cpu-bound/app-cpu.jar
+Environment=PORT=8080
+# Roda com o usuario da VM, que consegue ler a pasta pessoal onde fica o projeto.
+User=osboxes
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
