@@ -81,7 +81,7 @@ Na raiz, `up.sh` e `down.sh` sobem e derrubam a aplicação dentro da VM (`sudo 
 | `experiments/` | scripts que rodam no hospedeiro: prova local com Docker (`perfil_local.sh`) e experimento na VM (`vm_*.sh`) |
 | `analysis/` | tabelas e gráficos a partir dos resultados (`analisar.py`) |
 | `results/` | dados brutos, tabelas e gráficos: `local/` (prova com Docker) e `vm/` (experimento na VM) |
-| `docs/` | calibração e prints do ensaio de deploy |
+| `docs/` | calibração (tempo por pedido e saturação no Docker) |
 
 ### Experimento
 

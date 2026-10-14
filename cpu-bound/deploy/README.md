@@ -2,7 +2,7 @@
 
 Roteiro do professor aplicado à aplicação CPU-bound. Os comandos marcados "no hospedeiro" rodam na máquina física. O resto roda dentro da VM.
 
-Ensaiado num notebook com VirtualBox 7.0 (prints em `docs/img/prints/`, prefixo `ensaio_`). No LCC, refazer os mesmos passos e tirar os prints de novo.
+Ensaiado num notebook com VirtualBox 7.0. No LCC, refazer os mesmos passos e tirar os prints de cada etapa.
 
 ## No LCC: roteiro do dia
 
