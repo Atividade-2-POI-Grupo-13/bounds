@@ -1,0 +1,6 @@
+data: 2026-10-14T13:19:00-03:00
+container: 1 nucleo (--cpuset-cpus=4)
+iteracoes testadas: 253000
+tempos (ms, ordenados): 48.6 48.7 48.7 48.9 49.1 49.3 49.5 49.5 49.8 49.8 49.9 50.0 50.1 50.2 50.3 50.3 50.3 50.3 50.3 50.3 50.4 50.4 50.5 50.7 50.8 50.9 51.0 51.1 52.2 58.6
+mediana: 50.3 ms
+iteracoes para 50 ms: 251000

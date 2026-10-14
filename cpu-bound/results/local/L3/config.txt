@@ -1,0 +1,7 @@
+cenario: L3
+nucleos: 1 (4)  memoria: 512m  iteracoes: 253000
+taxas: 10 30 pedidos/s
+repeticoes: 3  aquecimento: 10s  medicao: 30s
+health: {"status":"ok","processadores":1,"threads":1}
+inicio: 2026-10-14T18:13:58-03:00
+fim: 2026-10-14T18:19:42-03:00

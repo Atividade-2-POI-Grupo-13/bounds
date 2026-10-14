@@ -1,0 +1,11 @@
+Enviando 30.0 pedidos/s: 10s de aquecimento + 30s medidos (1200 pedidos)
+Envio terminado. Esperando as respostas pendentes...
+
+Taxa enviada:        30.0 pedidos/s
+Vazao obtida:        19.7 respostas/s
+Pedidos medidos:     900 (900 ok, 0 com erro)
+Tempo de resposta:   media 13198.5 ms | p50 13222.7 | p95 20462.7 | p99 21281.9 | max 21441.8
+Sem resposta ao fim: 414 pedidos
+Atraso max. do gerador: 1.1 ms
+Pedidos gravados em results/local/L1/pedidos/r3_t30.csv
+Resumo acrescentado a results/local/L1/resumo.csv
