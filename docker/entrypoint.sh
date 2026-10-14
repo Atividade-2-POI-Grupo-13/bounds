@@ -9,7 +9,7 @@ set -u
 # então limitamos tudo isso, usamos o coletor de lixo mais simples (Serial) e só o
 # compilador mais leve (C1). A aplicação passa o tempo esperando I/O, então quase
 # não perde desempenho com isso.
-JAVA_OPTS=${JAVA_OPTS:--Xmx128m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:MaxMetaspaceSize=96m -XX:ReservedCodeCacheSize=32m -XX:MaxDirectMemorySize=64m -Xss512k}
+JAVA_OPTS=${JAVA_OPTS:--Xmx64m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:MaxMetaspaceSize=80m -XX:ReservedCodeCacheSize=24m -XX:MaxDirectMemorySize=32m -Xss256k}
 # Menos áreas de memória do malloc por processo (o padrão cresce com o número de threads)
 export MALLOC_ARENA_MAX=2
 

@@ -31,10 +31,10 @@ FAIXA_STRESS = "#efeeea"
 
 # Nome curto de cada cenário pronto do experimento.sh
 APELIDOS = {
-    ("C1", "1", "1g", "livre"): "referência",
-    ("C2", "1", "1g", "5mb"): "disco lento",
-    ("C3", "2", "1g", "livre"): "mais CPU",
-    ("C4", "1", "2g", "livre"): "mais memória",
+    ("V1", "1", "1024m", "livre"): "referência",
+    ("V2", "1", "1024m", "5mb"): "disco lento",
+    ("V3", "2", "1024m", "livre"): "mais CPU",
+    ("V4", "1", "768m", "livre"): "menos memória",
 }
 
 plt.rcParams.update({

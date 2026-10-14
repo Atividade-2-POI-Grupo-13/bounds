@@ -1,27 +1,19 @@
 #!/usr/bin/env bash
-# Roda o experimento inteiro num container limitado, com um comando só:
-# compila os apps, sobe os três dentro do container, mede e roda o stress test.
-# Os CSVs ficam em resultados/<data>_<hora>/.
+# Roda o experimento inteiro com um comando só: compila os apps, sobe os três
+# num container, roda o stress test medindo tudo e gera os gráficos.
+# Os resultados ficam em resultados/<data>_<hora>/.
 #
-# Uso: ./experimento.sh [cenário] [opções]
+# Uso: ./experimento.sh <cenário> [--clientes N] [--jobs N]
 #
-# Cenários (mudam uma coisa de cada vez em relação ao C1):
-#   C1   1 CPU,  1 GB, disco sem limite   (referência, é o padrão)
-#   C2   1 CPU,  1 GB, disco a 5 MB/s     (disco limitado)
-#   C3   2 CPUs, 1 GB, disco sem limite   (dobro de CPU)
-#   C4   1 CPU,  2 GB, disco sem limite   (dobro de memória)
+# Cenários (configure a VM no VirtualBox antes de rodar):
+#   V1   VM com 1 CPU,  1024 MB, disco sem limite   (referência)
+#   V2   VM com 1 CPU,  1024 MB, disco a 5 MB/s     (disco lento)
+#   V3   VM com 2 CPUs, 1024 MB, disco sem limite   (mais CPU)
+#   V4   VM com 1 CPU,   768 MB, disco sem limite   (menos memória)
 #
-# Opções (valem por cima do cenário):
-#   --cpus N        CPUs do container, ex.: 2 ou 0.5
-#   --memoria M     RAM do container, sem swap, ex.: 512m ou 2g
-#   --disco B       banda máxima de leitura e de escrita no disco, ex.: 10mb; "livre" tira o limite
+# Opções:
 #   --clientes N    produtores e consumidores do stress test (padrão 50 de cada)
 #   --jobs N        jobs de cada um (padrão 100)
-#
-# Exemplos:
-#   ./experimento.sh
-#   ./experimento.sh C2
-#   ./experimento.sh --cpus 2 --memoria 512m --disco 20mb --clientes 100
 
 set -eu
 
@@ -30,27 +22,22 @@ uso() {
     exit "${1:-0}"
 }
 
-cenario=C1
 case "${1:-}" in
-    C1 | C2 | C3 | C4) cenario=$1; shift ;;
+    V1) CPUS=1; MEMORIA=1024m; DISCO=livre ;;
+    V2) CPUS=1; MEMORIA=1024m; DISCO=5mb ;;
+    V3) CPUS=2; MEMORIA=1024m; DISCO=livre ;;
+    V4) CPUS=1; MEMORIA=768m; DISCO=livre ;;
     -h | --help) uso ;;
+    *) echo "Escolha um cenário: V1, V2, V3 ou V4" >&2; uso 1 ;;
 esac
+cenario=$1
+shift
 
-case "$cenario" in
-    C1) CPUS=1; MEMORIA=1g; DISCO=livre ;;
-    C2) CPUS=1; MEMORIA=1g; DISCO=5mb ;;
-    C3) CPUS=2; MEMORIA=1g; DISCO=livre ;;
-    C4) CPUS=1; MEMORIA=2g; DISCO=livre ;;
-esac
 CLIENTES=50
 JOBS=100
-
 while [ $# -gt 0 ]; do
     [ $# -ge 2 ] || { echo "Falta o valor de $1" >&2; uso 1; }
     case "$1" in
-        --cpus) CPUS=$2 ;;
-        --memoria) MEMORIA=$2 ;;
-        --disco) DISCO=$2 ;;
         --clientes) CLIENTES=$2 ;;
         --jobs) JOBS=$2 ;;
         *) echo "Opção desconhecida: $1" >&2; uso 1 ;;
@@ -61,7 +48,7 @@ export CENARIO=$cenario CPUS MEMORIA DISCO CLIENTES JOBS
 
 cd "$(dirname "$0")"
 
-# Disco onde o Docker guarda os containers: é nele que o limite de banda vale
+# Disco onde o Docker guarda os containers: é nele que o limite do V2 vale
 dispositivo() {
     if [ "$(uname)" = Darwin ]; then
         echo /dev/vda   # o disco da máquina virtual do Docker Desktop
@@ -75,17 +62,18 @@ dispositivo() {
 
 limite_disco=()
 if [ "$DISCO" != livre ]; then
-    disco=${DISCO_DISPOSITIVO:-$(dispositivo)}
+    disco=$(dispositivo)
     limite_disco=(--device-write-bps "$disco:$DISCO" --device-read-bps "$disco:$DISCO")
 fi
 
 echo "Compilando a imagem (a primeira vez demora alguns minutos)..."
 docker build -q -t io-bound . > /dev/null
 
-echo "Cenário $cenario: cpus=$CPUS, memoria=$MEMORIA, disco=$DISCO, $CLIENTES clientes com $JOBS jobs cada"
+echo "Cenário $cenario: $CPUS CPU, $MEMORIA, disco $DISCO, $CLIENTES clientes com $JOBS jobs cada"
 mkdir -p resultados
+# CPU e memória são as da VM; as portas ficam abertas para o redirecionamento do VirtualBox
 docker run --rm \
-    --cpus "$CPUS" --memory "$MEMORIA" --memory-swap "$MEMORIA" \
+    -p 8080:8080 -p 8081:8081 -p 8082:8082 \
     ${limite_disco[@]+"${limite_disco[@]}"} \
     --user "$(id -u):$(id -g)" \
     -e CENARIO -e CPUS -e MEMORIA -e DISCO -e CLIENTES -e JOBS \

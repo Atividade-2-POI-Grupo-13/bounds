@@ -12,24 +12,28 @@ Se o buffer está cheio ou vazio, ele recusa na hora, e quem pediu espera 100 ms
 
 ## Rodar o experimento
 
-Só precisa do Docker. Um comando compila tudo, sobe os três apps num container limitado, roda o stress test, mede e gera os gráficos:
+Na VM do roteiro (Ubuntu 22.04), instale o Git e o Docker e baixe o código:
 
 ```bash
-./experimento.sh C1
+sudo apt update && sudo apt install -y git docker.io && sudo usermod -aG docker $USER && sudo reboot
 ```
-
-| Cenário | CPUs | Memória | Disco |
-| --- | --- | --- | --- |
-| C1 (referência) | 1 | 1 GB | sem limite |
-| C2 (disco lento) | 1 | 1 GB | 5 MB/s |
-| C3 (mais CPU) | 2 | 1 GB | sem limite |
-| C4 (mais memória) | 1 | 2 GB | sem limite |
-
-Ou com valores escolhidos na mão (`./experimento.sh --help` lista tudo):
 
 ```bash
-./experimento.sh --cpus 2 --memoria 512m --disco 20mb --clientes 100 --jobs 50
+git clone https://github.com/Atividade-2-POI-Grupo-13/io-bound.git && cd io-bound
 ```
+
+Configure a VM no VirtualBox (desligada) e rode o cenário. Um comando compila tudo, sobe os três apps num container, roda o stress test, mede e gera os gráficos:
+
+| Cenário | VM | Comando |
+| --- | --- | --- |
+| V1 (referência) | 1 CPU, 1024 MB | `./experimento.sh V1` |
+| V2 (disco lento) | 1 CPU, 1024 MB | `./experimento.sh V2` |
+| V3 (mais CPU) | 2 CPUs, 1024 MB | `./experimento.sh V3` |
+| V4 (menos memória) | 1 CPU, 768 MB | `./experimento.sh V4` |
+
+No V2, o container limita o disco a 5 MB/s. Deixe desmarcado "Use Host I/O Cache" no controlador do disco, senão o disco quase não pesa.
+
+Redirecionamento de portas (NAT): 18080, 18081 e 18082 do hospedeiro para 8080, 8081 e 8082 da VM. Assim dá para ver o buffer durante o experimento: `curl localhost:18080/estado`.
 
 ## Resultados
 
