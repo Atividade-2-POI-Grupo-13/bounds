@@ -1,0 +1,22 @@
+# Unidade systemd dos tres apps da io-bound (buffer, produtor, consumidor).
+# O deploy/install.sh troca os __MARCADORES__ e copia para /etc/systemd/system/.
+# Uma instancia por app: io-bound@buffer, io-bound@produtor, io-bound@consumidor.
+#
+# Nao e habilitada no boot: os apps sobem com sudo ~/io-bound/up.sh, para so
+# uma aplicacao do grupo rodar por vez. O experimento.sh nao usa esta unidade:
+# ele sobe os apps sozinho, com as mesmas opcoes da JVM.
+[Unit]
+Description=io-bound: %i
+After=network.target
+
+[Service]
+User=__USUARIO__
+WorkingDirectory=__PASTA__
+# As mesmas opcoes do experimento.sh: os tres Java precisam caber juntos na VM.
+Environment=MALLOC_ARENA_MAX=2
+ExecStart=/usr/bin/java -Xmx64m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:MaxMetaspaceSize=80m -XX:ReservedCodeCacheSize=24m -XX:MaxDirectMemorySize=32m -Xss256k -jar __PASTA__/%i/target/%i-0.1.0.jar --buffer.dir=__PASTA__/data
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

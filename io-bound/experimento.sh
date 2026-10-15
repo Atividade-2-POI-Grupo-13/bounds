@@ -65,6 +65,14 @@ JAVA_OPTS="-Xmx64m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:MaxMetaspaceSize
 # Menos áreas de memória do malloc por processo (o padrão cresce com o número de threads)
 export MALLOC_ARENA_MAX=2
 
+# As portas precisam estar livres: outra aplicacao do grupo ou o up.sh podem estar no ar.
+for porta in 8080 8081 8082; do
+    if curl -s -m 2 -o /dev/null "localhost:$porta"; then
+        echo "A porta $porta ja esta em uso. Derrube as aplicacoes antes: for s in ~/*/down.sh; do sudo \"\$s\"; done" >&2
+        exit 1
+    fi
+done
+
 logs=$(mktemp -d)
 apps=()
 # Derruba os apps no fim, mesmo se algo der errado no meio
