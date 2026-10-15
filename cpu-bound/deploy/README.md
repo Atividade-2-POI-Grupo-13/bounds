@@ -9,7 +9,7 @@ Ensaiado num notebook com VirtualBox 7.0. No LCC, refazer os mesmos passos e tir
 O VDI já vem com os projetos instalados (passos 1 a 6 abaixo, feitos uma vez em casa). Os comandos com `$` rodam **no terminal do computador do LCC**, dentro da pasta `cpu-bound` (do `git clone` ou do pendrive). Só os marcados "na VM" rodam dentro dela.
 
 1. Copiar o VDI para `/tmp`. Se o VirtualBox recusar o disco por já conhecer outro com o mesmo identificador (UUID): `VBoxManage internalcommands sethduuid /tmp/<arquivo>.vdi`.
-2. Criar a VM `vm-poi` com esse disco, 1 CPU e 1024 MB (passo 1). Com outro nome, rode os scripts com `VM=nome-da-vm`.
+2. Criar a VM `vm-poi-exp` com esse disco, 1 CPU e 1024 MB (passo 1). Com outro nome, rode os scripts com `VM=nome-da-vm`.
 3. Criar as regras de porta: app 8080 → 8080, ssh 2222 → 22, nginx 8088 → 80 (passo 2).
 4. Ligar a VM e, na VM: `sudo ~/cpu-bound/up.sh`. No hospedeiro: `curl localhost:8080/health` deve mostrar `"processadores":1`.
 5. Copiar a chave ssh do computador do LCC para a VM (passo 7):
@@ -150,12 +150,10 @@ Na VM:
 
 ```
 cd ~ && curl -fsO http://10.0.2.2:8000/cpu-bound.tar.gz && tar xzf cpu-bound.tar.gz
-sudo cp ~/cpu-bound/deploy/app-cpu.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo ~/cpu-bound/up.sh
+cd ~/cpu-bound && ./deploy/install.sh
 ```
 
-O último comando deve mostrar `cpu-bound no ar`. Para parar: `sudo ~/cpu-bound/down.sh`.
+O `install.sh` instala o Java se faltar, compila o `.jar` se não existir, instala o serviço `app-cpu` fora do boot e testa subindo e derrubando a aplicação (deve mostrar `cpu-bound no ar`). Para parar: `sudo ~/cpu-bound/down.sh`.
 
 Se a VM tiver a instalação antiga (`/opt/app-cpu`, serviço habilitado no boot), antes: `sudo systemctl disable --now app-cpu && sudo rm -rf /opt/app-cpu`.
 
