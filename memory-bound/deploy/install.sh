@@ -86,7 +86,8 @@ sed -e "s#__PASTA__#$PASTA#g" \
 sed -e "s#__PASTA__#$PASTA#g" -e "s#__USUARIO__#$USUARIO#g" \
     deploy/rotas-monitor.service | sudo tee /etc/systemd/system/rotas-monitor.service > /dev/null
 sudo systemctl daemon-reload
-sudo systemctl enable -q rotas rotas-monitor
+# Não sobe no boot: no VDI do grupo só uma aplicação roda por vez (up.sh / down.sh).
+sudo systemctl disable -q rotas rotas-monitor 2> /dev/null || true
 sudo systemctl restart rotas rotas-monitor
 
 echo "== Esperando /health (o mapa leva alguns segundos para carregar)"
@@ -106,6 +107,7 @@ for _ in $(seq 1 60); do
     else
       echo "== AVISO: a VM está sem ssh. No hospedeiro, rode os experimentos com SEM_SSH=1"
     fi
+    echo "== Instalado. Para parar: sudo ./down.sh  Para subir: sudo ./up.sh"
     exit 0
   fi
   sleep 1

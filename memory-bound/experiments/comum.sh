@@ -1,17 +1,17 @@
 # Configurações comuns aos scripts de experimento (rodam no hospedeiro Linux do LCC3).
 # Tudo pode ser trocado por variável de ambiente.
 
-VM="${VM:-vm-rotas}"
+VM="${VM:-vm-poi-exp}"                      # a mesma VM das 3 aplicacoes do grupo
 HOST_VM="${HOST_VM:-localhost}"         # endereço da VM visto do hospedeiro (portas redirecionadas)
-PORTA_APP="${PORTA_APP:-8080}"          # hospedeiro 8080 -> VM 8000
+PORTA_APP="${PORTA_APP:-8000}"          # hospedeiro 8000 -> VM 8000 (a 8080 é da cpu-bound)
 PORTA_SSH="${PORTA_SSH:-2222}"          # hospedeiro 2222 -> VM 22
 USUARIO_VM="${USUARIO_VM:-osboxes}"
 SENHA_VM="${SENHA_VM:-osboxes.org}"     # senha pública da imagem, usada só no sudo da VM
-PASTA_VM="${PASTA_VM:-memory-bound-rotas}"  # pasta do projeto dentro da VM (a partir da home)
+PASTA_VM="${PASTA_VM:-memory-bound}"  # pasta do projeto dentro da VM (a partir da home)
 VBOXMANAGE="${VBOXMANAGE:-VBoxManage}"
 BASE_URL="${BASE_URL:-http://$HOST_VM:$PORTA_APP}"
 RESULTADOS="${RESULTADOS:-results/raw}"  # onde cenario.sh e run_level.sh gravam
-PORTA_MONITOR="${PORTA_MONITOR:-8081}"     # hospedeiro 8081 -> VM 8001 (deploy/monitor.py)
+PORTA_MONITOR="${PORTA_MONITOR:-8001}"     # hospedeiro 8001 -> VM 8001 (deploy/monitor.py)
 MONITOR_URL="${MONITOR_URL:-http://$HOST_VM:$PORTA_MONITOR}"
 export BASE_URL
 

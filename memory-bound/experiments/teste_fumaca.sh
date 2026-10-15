@@ -56,7 +56,7 @@ if curl -sf -m 3 "$MONITOR_URL" > /dev/null; then
   echo "   monitor da VM ok ($MONITOR_URL)"
 else
   echo "   AVISO: monitor da VM sem resposta em $MONITOR_URL (confira o serviço rotas-monitor e a"
-  echo "   regra NAT 8081 -> 8001); a coleta pelo hospedeiro vai usar o /metrics da aplicação"
+  echo "   regra NAT 8001 -> 8001); a coleta pelo hospedeiro vai usar o /metrics da aplicação"
 fi
 
 echo "== 4. Custo de iniciar uma viagem (VM com 2 GB, 1 usuário, viagens curtas)"

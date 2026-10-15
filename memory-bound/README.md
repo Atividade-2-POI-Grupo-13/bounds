@@ -89,12 +89,12 @@ O k6 roda no hospedeiro e chega à VM pelas portas redirecionadas do VirtualBox.
 
 | hospedeiro | VM | serviço |
 |---|---|---|
-| 8080 | 8000 | aplicação (`rotas`) |
-| 8081 | 8001 | monitor da VM (`rotas-monitor`, `deploy/monitor.py`) |
+| 8000 | 8000 | aplicação (`rotas`) |
+| 8001 | 8001 | monitor da VM (`rotas-monitor`, `deploy/monitor.py`) |
 | 2222 | 22 | ssh |
 | 8088 | 80 | nginx do teste de rede |
 
-Se a 8080 do hospedeiro já estiver ocupada, troque a regra da aplicação (por exemplo para 18080) e rode os scripts com `PORTA_APP=18080`.
+A VM é a mesma das três aplicações do grupo (`vm-poi`, ver `../vm/README.md`), e a 8080 do hospedeiro é da cpu-bound. Nenhuma aplicação sobe no boot: `experiments/cenario.sh` roda o `down.sh` de todas e o `up.sh` desta a cada troca de cenário. Na VM, à mão: `sudo ~/memory-bound/up.sh` e `sudo ~/memory-bound/down.sh`.
 
 ### 5.1 Cenários e carga
 

@@ -13,7 +13,7 @@
 #   BASE_URL, DURATION, TIMEOUT, AQUECIMENTO_S, PAUSA_S, RECALCULOS, MINUTOS, PONTOS
 # K6 aponta para o binário (padrão: k6 no PATH), por exemplo K6=~/bin/k6 no LCC.
 #
-# Exemplo: BASE_URL=http://localhost:8080 DURATION=60s load/rodar.sh viagem 10 results/teste
+# Exemplo: BASE_URL=http://localhost:8000 DURATION=60s load/rodar.sh viagem 10 results/teste
 set -euo pipefail
 
 if [ $# -ne 3 ]; then

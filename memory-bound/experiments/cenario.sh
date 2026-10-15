@@ -41,7 +41,7 @@ fi
 echo "== $nome: aplicando $cpus CPU e $ram_mb MB"
 # Logo depois de desligar, a VM pode continuar travada por alguns segundos: tenta de novo.
 # O IO-APIC precisa estar ligado para a VM subir com mais de 1 CPU.
-# Também garante o redirecionamento do monitor da VM (hospedeiro 8081 -> VM 8001):
+# Também garante o redirecionamento do monitor da VM (hospedeiro $PORTA_MONITOR -> VM 8001):
 # apaga a regra (se existir) e cria de novo.
 aplicado=0
 for _ in $(seq 1 10); do
@@ -58,6 +58,21 @@ if [ "$aplicado" = 0 ]; then
   exit 1
 fi
 "$VBOXMANAGE" startvm "$VM" --type headless > /dev/null
+
+# No VDI do grupo nenhuma aplicação sobe no boot: derruba todas e sobe esta.
+if [ "$SEM_SSH" != 1 ]; then
+  echo "== $nome: esperando o ssh e subindo a aplicação"
+  for tentativa in $(seq 1 60); do
+    na_vm true 2> /dev/null && break
+    if [ "$tentativa" = 60 ]; then
+      echo "ERRO: o ssh da VM não respondeu em 3 min" >&2
+      exit 1
+    fi
+    sleep 3
+  done
+  # Sem o limite de 60 s do na_vm: o up.sh espera o mapa carregar.
+  timeout 300 ssh -n "${SSH_BASE[@]}" "$USUARIO_VM@$HOST_VM" "for s in ~/*/down.sh; do echo '$SENHA_VM' | sudo -S -p '' \"\$s\"; done; echo '$SENHA_VM' | sudo -S -p '' ~/$PASTA_VM/up.sh"
+fi
 
 echo "== $nome: esperando a aplicação"
 esperar_health 300

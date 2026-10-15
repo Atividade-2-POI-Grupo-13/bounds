@@ -1,5 +1,7 @@
 # Deploy na VM
 
+> No VDI do grupo a VM se chama `vm-poi`, o projeto fica em `~/memory-bound` e as portas são as de `../vm/README.md` (aplicação 8000 → 8000, monitor 8001 → 8001). O `install.sh` deixa os serviços fora do boot; use `sudo ~/memory-bound/up.sh` e `down.sh`. Os comandos abaixo com `vm-rotas` e `memory-bound-rotas` são do ensaio antigo, com uma VM só para esta aplicação.
+
 Roteiro do professor aplicado à máquina do LCC3. `VBoxManage`, `scp` e os testes marcados "no hospedeiro" rodam na máquina do LCC3. O resto roda dentro da VM.
 
 ## 1. Criar a VM
