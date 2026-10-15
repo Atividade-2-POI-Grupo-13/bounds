@@ -1,0 +1,4 @@
+50 produtores e 50 consumidores, 100 jobs cada
+produtor:   5000 de 5000 jobs, buffer cheio 9269 vezes
+consumidor: 5000 de 5000 jobs, buffer vazio 8570 vezes
+tempo total: 28 s

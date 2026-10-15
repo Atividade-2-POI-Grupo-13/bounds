@@ -1,0 +1,22 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-15T00:13:31.597Z  INFO 1091 --- [consumidor] [           main] b.e.u.consumidor.ConsumidorApplication   : Starting ConsumidorApplication v0.1.0 using Java 21.0.12.1 with PID 1091 (/home/osboxes/io-bound/consumidor/target/consumidor-0.1.0.jar started by osboxes in /home/osboxes/io-bound)
+2026-10-15T00:13:31.604Z  INFO 1091 --- [consumidor] [           main] b.e.u.consumidor.ConsumidorApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-10-15T00:13:35.492Z  INFO 1091 --- [consumidor] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8082 (http)
+2026-10-15T00:13:36.324Z  INFO 1091 --- [consumidor] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-15T00:13:36.327Z  INFO 1091 --- [consumidor] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-15T00:13:36.467Z  INFO 1091 --- [consumidor] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 4519 ms
+2026-10-15T00:13:40.675Z  INFO 1091 --- [consumidor] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-10-15T00:13:40.751Z  INFO 1091 --- [consumidor] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
+2026-10-15T00:13:40.767Z  INFO 1091 --- [consumidor] [           main] b.e.u.consumidor.ConsumidorApplication   : Started ConsumidorApplication in 11.665 seconds (process running for 20.883)
+2026-10-15T00:13:41.571Z  INFO 1091 --- [consumidor] [omcat-handler-0] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-15T00:13:41.572Z  INFO 1091 --- [consumidor] [omcat-handler-0] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-15T00:13:41.573Z  INFO 1091 --- [consumidor] [omcat-handler-0] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms

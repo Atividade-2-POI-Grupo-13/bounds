@@ -1,0 +1,5 @@
+cenario,cpus,memoria,disco,completa,tempo_s,jobs_s,disco_mb_s,fsync_s,util_disco_pct,iowait_pct,cpu_apps_pct,rede_lo_mb_s,memoria_max_mb,recusas_cheio,recusas_vazio,pasta
+V1,1,1024m,livre,sim,28,178.6,20.51,170.4,40.0,9.04,59.9,66.6,452.0,9269,8570,V1_2026-10-15_00-11-12
+V2,1,1024m,5mb,nao,151,32.5,3.73,28.2,63.3,63.93,41.5,35.4,471.0,46289,47711,V2_2026-10-15_00-13-41
+V3,2,1024m,livre,sim,26,192.3,22.23,177.4,38.6,5.4,88.2,71.5,451.0,9025,8512,V3_2026-10-15_00-17-13
+V4,1,768m,livre,sim,30,166.7,20.07,172.0,41.1,6.93,68.2,66.8,411.0,10024,9699,V4_2026-10-15_00-18-39

@@ -1,0 +1,5 @@
+inicio: 2026-10-15 00:18:39
+maquina: Linux 5.15.0-25-generic x86_64, 1 CPUs
+apps (pid=nome): 1072=buffer 1073=produtor 1074=consumidor
+comando: ./stress.sh 50 100
+cenario: V4 (cpus=1, memoria=768m, disco=livre)
