@@ -59,17 +59,24 @@ if [ "$aplicado" = 0 ]; then
 fi
 "$VBOXMANAGE" startvm "$VM" --type headless > /dev/null
 
-# No VDI do grupo nenhuma aplicação sobe no boot: derruba todas e sobe esta.
-if [ "$SEM_SSH" != 1 ]; then
-  echo "== $nome: esperando o ssh e subindo a aplicação"
-  for tentativa in $(seq 1 60); do
-    na_vm true 2> /dev/null && break
-    if [ "$tentativa" = 60 ]; then
-      echo "ERRO: o ssh da VM não respondeu em 3 min" >&2
-      exit 1
-    fi
-    sleep 3
-  done
+# No VDI do grupo nenhuma aplicação sobe no boot: derruba todas e sobe esta pelo ssh.
+# Com SEM_SSH=1 (só a coleta fica sem ssh), tenta por menos tempo e segue sem ssh se não conseguir.
+tentativas=60
+[ "$SEM_SSH" = 1 ] && tentativas=20
+tem_ssh=0
+echo "== $nome: esperando o ssh e subindo a aplicação"
+for _ in $(seq 1 "$tentativas"); do
+  if na_vm true 2> /dev/null; then
+    tem_ssh=1
+    break
+  fi
+  sleep 3
+done
+if [ "$tem_ssh" = 0 ] && [ "$SEM_SSH" != 1 ]; then
+  echo "ERRO: o ssh da VM não respondeu em 3 min" >&2
+  exit 1
+fi
+if [ "$tem_ssh" = 1 ]; then
   # Sem o limite de 60 s do na_vm: o up.sh espera o mapa carregar.
   timeout 300 ssh -n "${SSH_BASE[@]}" "$USUARIO_VM@$HOST_VM" "for s in ~/*/down.sh; do echo '$SENHA_VM' | sudo -S -p '' \"\$s\"; done; echo '$SENHA_VM' | sudo -S -p '' ~/$PASTA_VM/up.sh"
 fi

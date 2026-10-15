@@ -41,7 +41,7 @@ V4 2 2048 livre mais CPU e memoria
 T
         ;;
         memory) cat <<'T'
-C1 1 512 livre menos memoria (o teste de fumaca pode recomendar 768)
+C1 1 768 livre menos memoria
 C2 1 1024 livre referencia
 C3 1 2048 livre mais memoria
 C4 2 1024 livre mais CPU
