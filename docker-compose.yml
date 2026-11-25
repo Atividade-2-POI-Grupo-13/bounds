@@ -1,0 +1,37 @@
+# Deploy das tres aplicacoes na VM da nuvem do LSD.
+#   docker compose up -d
+# As portas 1301 a 1304 sao as que os listeners do balanceador poi-atividades ja usam.
+# Troque wendelltmo pelo usuario do Docker Hub.
+services:
+  cpu-bound:
+    image: wendelltmo/poi-cpu-bound:1.0
+    ports: ["1301:8080"]
+    restart: always
+
+  memory-bound:
+    image: wendelltmo/poi-memory-bound:1.0
+    ports: ["1302:8000"]
+    restart: always
+
+  io-buffer:
+    image: wendelltmo/poi-io-bound:1.0
+    command: ["java", "-jar", "buffer-0.1.0.jar", "--buffer.dir=/data"]
+    restart: always
+
+  io-produtor:
+    image: wendelltmo/poi-io-bound:1.0
+    command: ["java", "-jar", "produtor-0.1.0.jar"]
+    environment:
+      PRODUTOR_BUFFER_URL: http://io-buffer:8080
+    ports: ["1303:8081"]
+    depends_on: [io-buffer]
+    restart: always
+
+  io-consumidor:
+    image: wendelltmo/poi-io-bound:1.0
+    command: ["java", "-jar", "consumidor-0.1.0.jar"]
+    environment:
+      CONSUMIDOR_BUFFER_URL: http://io-buffer:8080
+    ports: ["1304:8082"]
+    depends_on: [io-buffer]
+    restart: always
